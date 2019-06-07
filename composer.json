@@ -1,0 +1,27 @@
+{
+    "name": "stenfrank/soap-dian",
+    "description": "Web Service consumption of the DIAN SOAP UBL 2.1",
+    "authors": [
+        {
+            "name": "Stenfrank",
+            "email": "frank921713@hotmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "nesbot/carbon": "^2.19"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^7.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Stenfrank\\SoapDIAN\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Stenfrank\\Tests\\": "tests/"
+        }
+    }
+}
