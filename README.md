@@ -46,4 +46,4 @@ $domDocumentValidate->save('./SOAPDIAN21.xml')
 
 ## Authors ✒️
 
-* **Frank Agurre** - *Maintainer* - [Stenfrank](https://github.com/Stenfrank/)
+* **Frank Aguirre** - *Maintainer* - [Stenfrank](https://github.com/Stenfrank/)
