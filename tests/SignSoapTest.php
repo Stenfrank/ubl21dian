@@ -16,6 +16,7 @@ class SignSoapTest extends TestCase
      */
     private $xmlString = <<<XML
 <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:wcf="http://wcf.dian.colombia">
+<soap:Header/>
 <soap:Body>
   <wcf:GetStatus>
      <!--Optional:-->

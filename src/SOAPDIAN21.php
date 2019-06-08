@@ -3,7 +3,6 @@
 namespace Stenfrank\SoapDIAN;
 
 use Stenfrank\SoapDIAN\Traits\TraitMagic;
-use Carbon\Carbon;
 use DOMDocument,
     Exception;
 
@@ -13,6 +12,72 @@ use DOMDocument,
 class SOAPDIAN21
 {
     use TraitMagic;
+    
+    /**
+     * ADDRESSING
+     * @var string
+     */
+    const ADDRESSING = 'http://www.w3.org/2005/08/addressing';
+    
+    /**
+     * SOAP_ENVELOPE
+     * @var string
+     */
+    const SOAP_ENVELOPE = 'http://www.w3.org/2003/05/soap-envelope';
+    
+    /**
+     * DIAN_COLOMBIA
+     * @var string
+     */
+    const DIAN_COLOMBIA = 'http://wcf.dian.colombia';
+    
+    /**
+     * XMLDSIG
+     * @var string
+     */
+    const XMLDSIG = 'http://www.w3.org/2000/09/xmldsig#';
+    
+    /**
+     * WSS_WSSECURITY
+     * @var string
+     */
+    const WSS_WSSECURITY = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd';
+    
+    /**
+     * WSS_WSSECURITY_UTILITY
+     * @var string
+     */
+    const WSS_WSSECURITY_UTILITY = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd';
+    
+    /**
+     * EXC_C14N
+     * @var string
+     */
+    const EXC_C14N = 'http://www.w3.org/2001/10/xml-exc-c14n#';
+    
+    /**
+     * RSA_SHA256
+     * @var string
+     */
+    const RSA_SHA256 = 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256';
+    
+    /**
+     * SHA256
+     * @var string
+     */
+    const SHA256 = 'http://www.w3.org/2001/04/xmlenc#sha256';
+    
+    /**
+     * X509V3
+     * @var string
+     */
+    const X509V3 = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3';
+    
+    /**
+     * BASE64BINARY
+     * @var string
+     */
+    const BASE64BINARY = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary';
     
     /**
      * Version
@@ -44,9 +109,9 @@ class SOAPDIAN21
      * @var array
      */
     protected $toNS = [
-        'xmlns:wsa' => 'http://www.w3.org/2005/08/addressing',
-        'xmlns:soap' => 'http://www.w3.org/2003/05/soap-envelope',
-        'xmlns:wcf' => 'http://wcf.dian.colombia'
+        'xmlns:wsa' => self::ADDRESSING,
+        'xmlns:soap' => self::SOAP_ENVELOPE,
+        'xmlns:wcf' => self::DIAN_COLOMBIA
     ];
     
     /**
@@ -54,10 +119,10 @@ class SOAPDIAN21
      * @var array
      */
     protected $signedInfoNS = [
-        'xmlns:ds' => 'http://www.w3.org/2000/09/xmldsig#',
-        'xmlns:wsa' => 'http://www.w3.org/2005/08/addressing',
-        'xmlns:soap' => 'http://www.w3.org/2003/05/soap-envelope',
-        'xmlns:wcf' => 'http://wcf.dian.colombia'
+        'xmlns:ds' => self::XMLDSIG,
+        'xmlns:wsa' => self::ADDRESSING,
+        'xmlns:soap' => self::SOAP_ENVELOPE,
+        'xmlns:wcf' => self::DIAN_COLOMBIA
     ];
     
     /**
@@ -112,20 +177,22 @@ class SOAPDIAN21
         $this->domDocument = new DOMDocument($this->version, $this->encoding);
         $this->domDocument->loadXML($this->xmlString);
         
+        $this->removeChild('Header');
+        
         $this->header = $this->domDocument->createElement('soap:Header');
-        $this->header->setAttribute('xmlns:wsa', 'http://www.w3.org/2005/08/addressing');
+        $this->header->setAttribute('xmlns:wsa', self::ADDRESSING);
         $this->domDocument->documentElement->insertBefore($this->header, $this->domDocument->documentElement->firstChild);
         
-        $this->security = $this->domDocument->createElementNS('http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd', 'wsse:Security');
-        $this->security->setAttribute('xmlns:wsu', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd');
+        $this->security = $this->domDocument->createElementNS(self::WSS_WSSECURITY, 'wsse:Security');
+        $this->security->setAttribute('xmlns:wsu', self::WSS_WSSECURITY_UTILITY);
         $this->header->appendChild($this->security);
         
-        $this->action = $this->domDocument->createElement('wsa:Action', $this->Action ?? 'http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatus');
+        $this->action = $this->domDocument->createElement('wsa:Action', $this->Action ?? "{self::DIAN_COLOMBIA}/IWcfDianCustomerServices/GetStatus");
         $this->header->appendChild($this->action);
         
         $this->to = $this->domDocument->createElement('wsa:To', $this->To ?? 'https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc');
         $this->to->setAttribute('wsu:Id', $this->wsuIDTo);
-        $this->to->setAttribute('xmlns:wsu', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd');
+        $this->to->setAttribute('xmlns:wsu', self::WSS_WSSECURITY_UTILITY);
         $this->header->appendChild($this->to);
         
         $this->timestamp = $this->domDocument->createElement('wsu:Timestamp');
@@ -135,30 +202,31 @@ class SOAPDIAN21
         $this->created = $this->domDocument->createElement('wsu:Created', gmdate("Y-m-d\TH:i:s\Z", $this->CurrentTime));
         $this->timestamp->appendChild($this->created);
         
-        $this->expire = $this->domDocument->createElement('wsu:Expires', gmdate("Y-m-d\TH:i:s\Z", $this->CurrentTime + $this->TimeToLive ?? 60000));
+        $this->expire = $this->domDocument->createElement('wsu:Expires', gmdate("Y-m-d\TH:i:s\Z", $this->CurrentTime + ($this->TimeToLive ?? 60000)));
         $this->timestamp->appendChild($this->expire);
         
+        // x509Export
         $this->x509Export();
         
         $this->signature = $this->domDocument->createElement('ds:Signature');
         $this->signature->setAttribute('Id', $this->signatureID);
-        $this->signature->setAttribute('xmlns:ds', 'http://www.w3.org/2000/09/xmldsig#');
+        $this->signature->setAttribute('xmlns:ds', self::XMLDSIG);
         $this->security->appendChild($this->signature);
         
         $this->signedInfo = $this->domDocument->createElement('ds:SignedInfo');
         $this->signature->appendChild($this->signedInfo);
         
         $this->canonicalizationMethod = $this->domDocument->createElement('ds:CanonicalizationMethod');
-        $this->canonicalizationMethod->setAttribute('Algorithm', 'http://www.w3.org/2001/10/xml-exc-c14n#');
+        $this->canonicalizationMethod->setAttribute('Algorithm', self::EXC_C14N);
         $this->signedInfo->appendChild($this->canonicalizationMethod);
         
         $this->inclusiveNamespaces1 = $this->domDocument->createElement('ec:InclusiveNamespaces');
         $this->inclusiveNamespaces1->setAttribute('PrefixList', 'wsa soap wcf');
-        $this->inclusiveNamespaces1->setAttribute('xmlns:ec', 'http://www.w3.org/2001/10/xml-exc-c14n#');
+        $this->inclusiveNamespaces1->setAttribute('xmlns:ec', self::EXC_C14N);
         $this->canonicalizationMethod->appendChild($this->inclusiveNamespaces1);
         
         $this->signatureMethod = $this->domDocument->createElement('ds:SignatureMethod');
-        $this->signatureMethod->setAttribute('Algorithm', 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha256');
+        $this->signatureMethod->setAttribute('Algorithm', self::RSA_SHA256);
         $this->signedInfo->appendChild($this->signatureMethod);
         
         $this->reference1 = $this->domDocument->createElement('ds:Reference');
@@ -169,22 +237,22 @@ class SOAPDIAN21
         $this->reference1->appendChild($this->transforms);
         
         $this->transform = $this->domDocument->createElement('ds:Transform');
-        $this->transform->setAttribute('Algorithm', 'http://www.w3.org/2001/10/xml-exc-c14n#');
+        $this->transform->setAttribute('Algorithm', self::EXC_C14N);
         $this->transforms->appendChild($this->transform);
         
         $this->inclusiveNamespaces2 = $this->domDocument->createElement('ec:InclusiveNamespaces');
         $this->inclusiveNamespaces2->setAttribute('PrefixList', 'soap wcf');
-        $this->inclusiveNamespaces2->setAttribute('xmlns:ec', 'http://www.w3.org/2001/10/xml-exc-c14n#');
+        $this->inclusiveNamespaces2->setAttribute('xmlns:ec', self::EXC_C14N);
         $this->transform->appendChild($this->inclusiveNamespaces2);
         
         $this->digestMethod = $this->domDocument->createElement('ds:DigestMethod');
-        $this->digestMethod->setAttribute('Algorithm', 'http://www.w3.org/2001/04/xmlenc#sha256');
+        $this->digestMethod->setAttribute('Algorithm', self::SHA256);
         $this->reference1->appendChild($this->digestMethod);
         
-        /** DigestValue */;
+        // DigestValue
         $this->digestValue();
         
-        /** SignatureValue */
+        // SignatureValue
         $this->signature();
         
         $this->keyInfo = $this->domDocument->createElement('ds:KeyInfo');
@@ -197,8 +265,19 @@ class SOAPDIAN21
         
         $this->reference2 = $this->domDocument->createElement('wsse:Reference');
         $this->reference2->setAttribute('URI', "#{$this->wsuBinarySecurityTokenID}");
-        $this->reference2->setAttribute('ValueType', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3');
+        $this->reference2->setAttribute('ValueType', self::X509V3);
         $this->securityTokenReference->appendChild($this->reference2);
+    }
+    
+    /**
+     * Remove child
+     * @param  string $tagName
+     * @return void
+     */
+    private function removeChild($tagName) {
+        if (is_null($tag = $this->domDocument->documentElement->getElementsByTagName($tagName)->item(0))) return;
+        
+        $this->domDocument->documentElement->removeChild($tag);
     }
     
     /**
@@ -222,8 +301,8 @@ class SOAPDIAN21
         }
         
         $this->token = $this->domDocument->createElement('wsse:BinarySecurityToken', $stringCert ?? null);
-        $this->token->setAttribute('EncodingType', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary');
-        $this->token->setAttribute('ValueType', 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-x509-token-profile-1.0#X509v3');
+        $this->token->setAttribute('EncodingType', self::BASE64BINARY);
+        $this->token->setAttribute('ValueType', self::X509V3);
         $this->token->setAttribute('wsu:Id', $this->wsuBinarySecurityTokenID);
         $this->security->appendChild($this->token);
     }
@@ -234,8 +313,19 @@ class SOAPDIAN21
      */
     private function identifiersReferences() {
         foreach ($this->ids as $key => $value) {
-            $this->$key = "{$value}-".md5(Carbon::now()->format('YmdHisu'));
+            $this->$key = mb_strtoupper("{$value}-".sha1(uniqid()));
         }
+    }
+    
+    /**
+     * Array to string 
+     * @param  array  $NS
+     * @return string
+     */
+    private function arrayToString(array $NS) {
+        return implode(' ', array_map(function($value, $key) {
+            return "{$key}=\"$value\"";
+        }, $NS,  array_keys($NS)));
     }
     
     /**
@@ -244,12 +334,8 @@ class SOAPDIAN21
      * @return string
      */
     public function digestValue($string = null) {
-        $toNS = implode(' ', array_map(function($value, $key) {
-            return "{$key}=\"$value\"";
-        }, $this->toNS,  array_keys($this->toNS)));
-        
         $domDocument = new DOMDocument($this->version, $this->encoding);
-        $domDocument->loadXML(str_replace('<wsa:To ', "<wsa:To {$toNS} ", $string ?? $this->domDocument->saveXML($this->to)));
+        $domDocument->loadXML(str_replace('<wsa:To ', "<wsa:To {$this->arrayToString($this->toNS)} ", $string ?? $this->domDocument->saveXML($this->to)));
         
         $digestValue = base64_encode(hash('sha256', $domDocument->C14N(), true));
         
@@ -267,12 +353,8 @@ class SOAPDIAN21
      * @return string
      */
     public function signature($string = null) {
-        $signedInfoNS = implode(' ', array_map(function($value, $key) {
-            return "{$key}=\"$value\"";
-        }, $this->signedInfoNS,  array_keys($this->signedInfoNS)));
-        
         $domDocument = new DOMDocument($this->version, $this->encoding);
-        $domDocument->loadXML(str_replace('<ds:SignedInfo', "<ds:SignedInfo {$signedInfoNS}", $string ?? $this->domDocument->saveXML($this->signedInfo)));
+        $domDocument->loadXML(str_replace('<ds:SignedInfo', "<ds:SignedInfo {$this->arrayToString($this->signedInfoNS)}", $string ?? $this->domDocument->saveXML($this->signedInfo)));
         
         if (!openssl_sign($domDocument->C14N(), $sing, $this->certs['pkey'], 'RSA-SHA256')) die('Failure Signing Data: '.openssl_error_string().' - RSA-SHA256');
         

@@ -6,7 +6,8 @@ The author of soap-dian is Frank Aguirre.
 
 # Branches
 Master is currently the only actively maintained branch.
-* 0.1: Contains valid tests with Binary Security Token, for the DIAN
+* 0.1: Contains valid tests with Binary Security Token, for the DIAN.
+* 0.2: Fixed timestamp error, CARBON is no longer a dependency.
 
 # Requirements
 
@@ -24,24 +25,30 @@ composer require stenfrank/soap-dian
 ## Basic usage
 
 ```php
-$pathCertificate = dirname(dirname(__FILE__)).'/PATH_CERTIFICATE.p12';
+$pathCertificate = 'PATH_CERTIFICATE.p12';
 $passwors = 'PASSWORS_CERTIFICATE';
 
+$xmlString = <<<XML
+<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:wcf="http://wcf.dian.colombia">
+    <soap:Header/>
+    <soap:Body>
+        <wcf:GetStatus>
+            <!--Optional:-->
+            <wcf:trackId>123456666</wcf:trackId>
+        </wcf:GetStatus>
+    </soap:Body>
+</soap:Envelope>
+XML;
+
 $domDocument = new DOMDocument();
-$domDocument->loadXML($this->xmlString);
+$domDocument->loadXML($xmlString);
 
-$soap21 = new SOAPDIAN21($pathCertificate, $passwors);
-$soap21->Action = 'http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatus';
-$soap21->To = 'https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc';
-$soap21->CurrentTime = time();
-$soap21->TimeToLive = 60000;
+$soapdian21 = new SOAPDIAN21($pathCertificate, $passwors);
+$soapdian21->Action = 'http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatus';
 
-$soap21->startNodes($domDocument->saveXML());
+$soapdian21->startNodes($domDocument->saveXML());
 
-$domDocumentValidate = new DOMDocument;
-$domDocumentValidate->validateOnParse = true;
-
-$domDocumentValidate->save('./SOAPDIAN21.xml')
+file_put_contents('./SOAPDIAN21.xml', $soapdian21->soap);
 ```
 
 ## Authors ✒️
