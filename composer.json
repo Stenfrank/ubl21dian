@@ -1,14 +1,35 @@
 {
     "name": "stenfrank/soap-dian",
+    "type": "library",
     "description": "Web Service consumption of the DIAN SOAP UBL 2.1",
+    "homepage": "https://soenac.com",
+    "keywords": [
+        "soap dian",
+        "web service",
+        "dian",
+        "xml",
+        "ubl"
+    ],
+    "support": {
+        "issues": "https://github.com/Stenfrank/soap-dian/issues",
+        "source": "https://github.com/Stenfrank/soap-dian"
+    },
+    "license": "MIT",
     "authors": [
         {
             "name": "Stenfrank",
-            "email": "frank921713@hotmail.com"
+            "email": "frank921713@hotmail.com",
+            "homepage": "https://soenac.com"
         }
     ],
     "minimum-stability": "stable",
     "require": {
+        "php": "^7.2",
+        "ext-dom": "*",
+        "ext-libxml": "*",
+        "ext-mbstring": "*",
+        "ext-xml": "*",
+        "ext-xmlwriter": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "^7.0"
