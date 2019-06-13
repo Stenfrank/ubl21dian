@@ -36,7 +36,7 @@ XML;
         $domDocumentValidate = new DOMDocument;
         $domDocumentValidate->validateOnParse = true;
         
-        $this->assertSame(true, $domDocumentValidate->loadXML($soap21->soap));
+        $this->assertSame(true, $domDocumentValidate->loadXML($soap21->xml));
     }
     
     /** @test */
@@ -53,13 +53,11 @@ XML;
         $soap21->CurrentTime = time();
         $soap21->TimeToLive = 60000;
         
-        $soap21->startNodes($domDocument->saveXML());
+        $soap21->sign($domDocument->saveXML());
         
         $domDocumentValidate = new DOMDocument;
         $domDocumentValidate->validateOnParse = true;
         
-        $this->assertSame(true, $domDocumentValidate->loadXML($soap21->soap));
-        
-        file_put_contents('/home/frank/public_html/Project/soap-dian/SOAPDIAN21.xml', $domDocumentValidate->saveXML());
+        $this->assertSame(true, $domDocumentValidate->loadXML($soap21->xml));
     }
 }

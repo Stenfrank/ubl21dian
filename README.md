@@ -2,17 +2,10 @@
 
 Web Service consumption of the DIAN SOAP UBL 2.1.
 
-The author of soap-dian is Frank Aguirre.
-
-# Branches
-Master is currently the only actively maintained branch.
+# Tags
 * 0.1: Contains valid tests with Binary Security Token, for the DIAN.
 * 0.2: Fixed timestamp error, CARBON is no longer a dependency.
-
-# Requirements
-
-OpenSSL and PHP version >= 7.0
-
+* 1.0: XAdES signature is added with the sha256 and sha512 algorithm.
 
 ## How to Install
 
@@ -22,7 +15,7 @@ Install with [`composer.phar`](http://getcomposer.org).
 composer require stenfrank/soap-dian
 ```
 
-## Basic usage
+## Basic usage soap
 
 ```php
 $pathCertificate = 'PATH_CERTIFICATE.p12';
@@ -46,12 +39,68 @@ $domDocument->loadXML($xmlString);
 $soapdian21 = new SOAPDIAN21($pathCertificate, $passwors);
 $soapdian21->Action = 'http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatus';
 
-$soapdian21->startNodes($domDocument->saveXML());
+$soapdian21->sign($domDocument->saveXML());
 
-file_put_contents('./SOAPDIAN21.xml', $soapdian21->soap);
+file_put_contents('./SOAPDIAN21.xml', $soapdian21->xml);
 ```
 
-## Authors ✒️
+## Basic usage sing sha256
+
+```php
+$pathCertificate = 'PATH_CERTIFICATE.p12';
+$passwors = 'PASSWORS_CERTIFICATE';
+
+$xmlString = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice>
+    <ext:UBLExtensions>
+        <ext:UBLExtension>
+            <ext:ExtensionContent/>
+        </ext:UBLExtension>
+        <ext:UBLExtension>
+            <ext:ExtensionContent/>
+        </ext:UBLExtension>
+    </ext:UBLExtensions>
+</Invoice>
+XML;
+
+$domDocument = new DOMDocument();
+$domDocument->loadXML($xmlString);
+
+$xadesDIAN = new XAdESDIAN($pathCertificate, $passwors, $this->xmlString);
+
+file_put_contents('./SING256.xml', $xadesDIAN->xml);
+```
+
+## Basic usage sing sha512
+
+```php
+$pathCertificate = 'PATH_CERTIFICATE.p12';
+$passwors = 'PASSWORS_CERTIFICATE';
+
+$xmlString = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice>
+    <ext:UBLExtensions>
+        <ext:UBLExtension>
+            <ext:ExtensionContent/>
+        </ext:UBLExtension>
+        <ext:UBLExtension>
+            <ext:ExtensionContent/>
+        </ext:UBLExtension>
+    </ext:UBLExtensions>
+</Invoice>
+XML;
+
+$domDocument = new DOMDocument();
+$domDocument->loadXML($xmlString);
+
+$xadesDIAN = new XAdESDIAN($pathCertificate, $passwors, $this->xmlString, XAdESDIAN::ALGO_SHA512);
+
+file_put_contents('./SING512.xml', $xadesDIAN->xml);
+```
+
+## Authors
 
 * **Frank Aguirre** - *Maintainer* - [Stenfrank](https://github.com/Stenfrank/)
 

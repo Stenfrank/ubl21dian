@@ -2,17 +2,13 @@
 
 namespace Stenfrank\SoapDIAN;
 
-use Stenfrank\SoapDIAN\Traits\TraitMagic;
-use DOMDocument,
-    Exception;
+use DOMDocument;
 
 /**
  * SOAP DIAN 21 - Web Service of tests and production
  */
-class SOAPDIAN21
+class SOAPDIAN21 extends Sing
 {
-    use TraitMagic;
-    
     /**
      * ADDRESSING
      * @var string
@@ -80,22 +76,10 @@ class SOAPDIAN21
     const BASE64BINARY = 'http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary';
     
     /**
-     * Version
-     * @var string
-     */
-    public $version = '1.0';
-    
-    /**
-     * Encoding
-     * @var string
-     */
-    public $encoding = 'UTF-8';
-    
-    /**
      * IDS
      * @var array
      */
-    private $ids = [
+    protected $ids = [
         'wsuBinarySecurityTokenID' => 'SOENAC',
         'securityTokenReferenceID' => 'STR',
         'signatureID' => 'SIG',
@@ -125,53 +109,19 @@ class SOAPDIAN21
         'xmlns:wcf' => self::DIAN_COLOMBIA
     ];
     
-    /**
-     * Certs
-     * @var array
-     */
-    protected $certs;
-    
     public function __construct($pathCertificate = null, $passwors = null, $xmlString = null) {
-        $this->pathCertificate = $pathCertificate;
-        $this->passwors = $passwors;
-        $this->xmlString = $xmlString;
         $this->CurrentTime = time();
         
-        $this->readCerts();
-        $this->identifiersReferences();
-        
-        $this->startNodes();
+        parent::__construct($pathCertificate, $passwors, $xmlString);
         
         return $this;
-    }
-    
-    /**
-     * Get document
-     * @return DOMDocument
-     */
-    public function getDocument() {
-        return $this->domDocument;
-    }
-    
-    /**
-     * Start nodes
-     * @param  string $string
-     * @return void
-     */
-    public function startNodes($string = null) {
-        if ($string != null) $this->xmlString = $string;
-        
-        if (!is_null($this->xmlString)) {
-            $this->loadXML();
-            $this->soap = $this->domDocument->saveXML();
-        }
     }
     
     /**
      * Load XML
      * @return void
      */
-    private function loadXML() {
+    protected function loadXML() {
         if ($this->xmlString instanceof DOMDocument) $this->xmlString = $this->xmlString->saveXML();
         
         $this->domDocument = new DOMDocument($this->version, $this->encoding);
@@ -187,7 +137,7 @@ class SOAPDIAN21
         $this->security->setAttribute('xmlns:wsu', self::WSS_WSSECURITY_UTILITY);
         $this->header->appendChild($this->security);
         
-        $this->action = $this->domDocument->createElement('wsa:Action', $this->Action ?? "{self::DIAN_COLOMBIA}/IWcfDianCustomerServices/GetStatus");
+        $this->action = $this->domDocument->createElement('wsa:Action', $this->Action ?? 'http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatus');
         $this->header->appendChild($this->action);
         
         $this->to = $this->domDocument->createElement('wsa:To', $this->To ?? 'https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc');
@@ -206,7 +156,11 @@ class SOAPDIAN21
         $this->timestamp->appendChild($this->expire);
         
         // x509Export
-        $this->x509Export();
+        $this->token = $this->domDocument->createElement('wsse:BinarySecurityToken', $this->x509Export());
+        $this->token->setAttribute('EncodingType', self::BASE64BINARY);
+        $this->token->setAttribute('ValueType', self::X509V3);
+        $this->token->setAttribute('wsu:Id', $this->wsuBinarySecurityTokenID);
+        $this->security->appendChild($this->token);
         
         $this->signature = $this->domDocument->createElement('ds:Signature');
         $this->signature->setAttribute('Id', $this->signatureID);
@@ -270,79 +224,20 @@ class SOAPDIAN21
     }
     
     /**
-     * Remove child
-     * @param  string $tagName
-     * @return void
-     */
-    private function removeChild($tagName) {
-        if (is_null($tag = $this->domDocument->documentElement->getElementsByTagName($tagName)->item(0))) return;
-        
-        $this->domDocument->documentElement->removeChild($tag);
-    }
-    
-    /**
-     * Read certs
-     * @return void
-     */
-    private function readCerts() {
-        if (is_null($this->pathCertificate) || is_null($this->passwors)) throw new Exception('Class '.get_class($this).' requires the certificate path and password.');
-        
-        if (!openssl_pkcs12_read(file_get_contents($this->pathCertificate), $this->certs, $this->passwors)) throw new Exception('Failure signing data: '.openssl_error_string());
-    }
-    
-    /**
-     * X509 export
-     * @return void
-     */
-    private function x509Export() {
-        if (!empty($this->certs)) {
-            openssl_x509_export($this->certs['cert'], $stringCert);
-            $stringCert = str_replace(["\r", "\n", "-----BEGIN CERTIFICATE-----", "-----END CERTIFICATE-----"], '', $stringCert);
-        }
-        
-        $this->token = $this->domDocument->createElement('wsse:BinarySecurityToken', $stringCert ?? null);
-        $this->token->setAttribute('EncodingType', self::BASE64BINARY);
-        $this->token->setAttribute('ValueType', self::X509V3);
-        $this->token->setAttribute('wsu:Id', $this->wsuBinarySecurityTokenID);
-        $this->security->appendChild($this->token);
-    }
-    
-    /**
-     * Identifiers references
-     * @return void
-     */
-    private function identifiersReferences() {
-        foreach ($this->ids as $key => $value) {
-            $this->$key = mb_strtoupper("{$value}-".sha1(uniqid()));
-        }
-    }
-    
-    /**
-     * Array to string 
-     * @param  array  $NS
-     * @return string
-     */
-    private function arrayToString(array $NS) {
-        return implode(' ', array_map(function($value, $key) {
-            return "{$key}=\"$value\"";
-        }, $NS,  array_keys($NS)));
-    }
-    
-    /**
      * Digest value
      * @param  string $string
      * @return string
      */
     public function digestValue($string = null) {
         $domDocument = new DOMDocument($this->version, $this->encoding);
-        $domDocument->loadXML(str_replace('<wsa:To ', "<wsa:To {$this->arrayToString($this->toNS)} ", $string ?? $this->domDocument->saveXML($this->to)));
+        $domDocument->loadXML(str_replace('<wsa:To ', "<wsa:To {$this->joinArray($this->toNS)} ", $string ?? $this->domDocument->saveXML($this->to)));
         
         $digestValue = base64_encode(hash('sha256', $domDocument->C14N(), true));
         
         $this->digestValue = $this->domDocument->createElement('ds:DigestValue', $digestValue);
         $this->reference1->appendChild($this->digestValue);
         
-        $this->soap = $this->domDocument->saveXML();
+        $this->xml = $this->domDocument->saveXML();
         
         return $digestValue;
     }
@@ -354,7 +249,7 @@ class SOAPDIAN21
      */
     public function signature($string = null) {
         $domDocument = new DOMDocument($this->version, $this->encoding);
-        $domDocument->loadXML(str_replace('<ds:SignedInfo', "<ds:SignedInfo {$this->arrayToString($this->signedInfoNS)}", $string ?? $this->domDocument->saveXML($this->signedInfo)));
+        $domDocument->loadXML(str_replace('<ds:SignedInfo', "<ds:SignedInfo {$this->joinArray($this->signedInfoNS)}", $string ?? $this->domDocument->saveXML($this->signedInfo)));
         
         if (!openssl_sign($domDocument->C14N(), $sing, $this->certs['pkey'], 'RSA-SHA256')) die('Failure Signing Data: '.openssl_error_string().' - RSA-SHA256');
         
@@ -363,7 +258,7 @@ class SOAPDIAN21
         $this->signatureValue = $this->domDocument->createElement('ds:SignatureValue', $sing);
         $this->signature->appendChild($this->signatureValue);
         
-        $this->soap = $this->domDocument->saveXML();
+        $this->xml = $this->domDocument->saveXML();
         
         return $sing;
     }
