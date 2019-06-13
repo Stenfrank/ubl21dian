@@ -2,7 +2,7 @@
 
 namespace Stenfrank\Tests;
 
-use Stenfrank\SoapDIAN\SOAPDIAN21;
+use Stenfrank\UBL21dian\SOAPDIAN21;
 use DOMDocument;
 
 /**

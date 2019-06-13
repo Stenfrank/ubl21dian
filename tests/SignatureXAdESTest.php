@@ -2,7 +2,7 @@
 
 namespace Stenfrank\Tests;
 
-use Stenfrank\SoapDIAN\XAdESDIAN;
+use Stenfrank\UBL21dian\XAdESDIAN;
 use DOMDocument;
 
 /**
@@ -597,6 +597,21 @@ class SignatureXAdESTest extends TestCase
     </cac:InvoiceLine>
 </Invoice>
 XML;
+    
+    /** @test */
+    function it_generates_signature_XAdES_sha1() {
+        $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
+        $passwors = '3T3rN4661343';
+        
+        $xadesDIAN = new XAdESDIAN($pathCertificate, $passwors, $this->xmlString, XAdESDIAN::ALGO_SHA1);
+        
+        $domDocumentValidate = new DOMDocument;
+        $domDocumentValidate->validateOnParse = true;
+        
+        $this->assertSame(true, $domDocumentValidate->loadXML($xadesDIAN->xml));
+        
+        file_put_contents('/home/frank/public_html/Project/ubl-21-dian/SING1.xml', $xadesDIAN->xml);
+    }
     
     /** @test */
     function it_generates_signature_XAdES_sha256() {

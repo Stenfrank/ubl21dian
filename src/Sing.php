@@ -1,8 +1,8 @@
 <?php
 
-namespace Stenfrank\SoapDIAN;
+namespace Stenfrank\UBL21dian;
 
-use Stenfrank\SoapDIAN\Traits\DIANTrait;
+use Stenfrank\UBL21dian\Traits\DIANTrait;
 
 /**
  * 

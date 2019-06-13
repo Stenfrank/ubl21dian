@@ -1,6 +1,6 @@
 <?php
 
-namespace Stenfrank\SoapDIAN;
+namespace Stenfrank\UBL21dian;
 
 use DOMDocument;
 

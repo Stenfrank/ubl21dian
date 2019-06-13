@@ -1,6 +1,6 @@
 <?php
 
-namespace Stenfrank\SoapDIAN;
+namespace Stenfrank\UBL21dian;
 
 use Carbon\Carbon;
 use DOMDocument;
@@ -45,6 +45,17 @@ class XAdESDIAN extends Sing
      * @var string
      */
     const SIGNED_PROPERTIES = 'http://uri.etsi.org/01903#SignedProperties';
+    
+    /**
+     * ALGO_SHA1
+     * @var array
+     */
+    const ALGO_SHA1 = [
+        'rsa' => 'http://www.w3.org/2001/04/xmldsig-more#rsa-sha1',
+        'algorithm' => 'http://www.w3.org/2001/04/xmlenc#sha1',
+        'sign' => OPENSSL_ALGO_SHA1,
+        'hash' => 'sha1'
+    ];
     
     /**
      * ALGO_SHA256
@@ -108,7 +119,7 @@ class XAdESDIAN extends Sing
      */
     private $extracerts = [];
     
-    public function __construct($pathCertificate = null, $passwors = null, $xmlString = null, $algorithm = self::ALGO_SHA512) {
+    public function __construct($pathCertificate = null, $passwors = null, $xmlString = null, $algorithm = self::ALGO_SHA1) {
         $this->algorithm = $algorithm;
         
         parent::__construct($pathCertificate, $passwors, $xmlString);
@@ -123,7 +134,7 @@ class XAdESDIAN extends Sing
     protected function loadXML() {
         if ($this->xmlString instanceof DOMDocument) $this->xmlString = $this->xmlString->saveXML();
         
-        $this->domDocument = new DOMDocument;
+        $this->domDocument = new DOMDocument($this->version, $this->encoding);
         $this->domDocument->loadXML($this->xmlString);
         
         // Digest value xml clean
@@ -286,7 +297,7 @@ class XAdESDIAN extends Sing
         $this->digestValueXML = $this->domDocument->createElement('ds:DigestValue', $this->DigestValueXML);
         $this->referenceXML->appendChild($this->digestValueXML);
         
-        $this->domDocumentReferenceKeyInfoC14N = new DOMDocument;
+        $this->domDocumentReferenceKeyInfoC14N = new DOMDocument($this->version, $this->encoding);
         $this->domDocumentReferenceKeyInfoC14N->loadXML(str_replace('<ds:KeyInfo ', "<ds:KeyInfo {$this->joinArray($this->ns)} ", $this->domDocument->saveXML($this->keyInfo)));
         
         $this->DigestValueKeyInfo = base64_encode(hash($this->algorithm['hash'], $this->domDocumentReferenceKeyInfoC14N->C14N(), true));
@@ -311,7 +322,7 @@ class XAdESDIAN extends Sing
         $this->digestMethodSignedProperties->setAttribute('Algorithm', $this->algorithm['algorithm']);
         $this->referenceSignedProperties->appendChild($this->digestMethodSignedProperties);
         
-        $this->domDocumentSignedPropertiesC14N = new DOMDocument;
+        $this->domDocumentSignedPropertiesC14N = new DOMDocument($this->version, $this->encoding);
         $this->domDocumentSignedPropertiesC14N->loadXML(str_replace('<xades:SignedProperties ', "<xades:SignedProperties {$this->joinArray($this->ns)} ", $this->domDocument->saveXML($this->signedProperties)));
         
         $this->DigestValueSignedProperties = base64_encode(hash($this->algorithm['hash'], $this->domDocumentSignedPropertiesC14N->C14N(), true));
@@ -320,7 +331,7 @@ class XAdESDIAN extends Sing
         $this->referenceSignedProperties->appendChild($this->digestValueSignedProperties);
         
         // Signature set value
-        $this->domDocumentSignatureValueC14N = new DOMDocument();
+        $this->domDocumentSignatureValueC14N = new DOMDocument($this->version, $this->encoding);
         $this->domDocumentSignatureValueC14N->loadXML(str_replace('<ds:SignedInfo', "<ds:SignedInfo {$this->joinArray($this->ns)} ", $this->domDocument->saveXML($this->signedInfo)));
         
         openssl_sign($this->domDocumentSignatureValueC14N->C14N(), $this->resultSignature, $this->certs['pkey'], $this->algorithm['sign']);

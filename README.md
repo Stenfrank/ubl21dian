@@ -1,11 +1,9 @@
 # soap-dian
 
-Web Service consumption of the DIAN SOAP UBL 2.1.
+Core for electronic invoicing pre-validation - DIAN UBL 2.1.
 
 # Tags
-* 0.1: Contains valid tests with Binary Security Token, for the DIAN.
-* 0.2: Fixed timestamp error, CARBON is no longer a dependency.
-* 1.0: XAdES signature is added with the sha256 and sha512 algorithm.
+* 1.0: Contains valid tests with binary security token (SOAP) and XAdES signature (XML) with algorithms sha1, sha256 and sha512.
 
 ## How to Install
 
@@ -43,8 +41,35 @@ $soapdian21->sign($domDocument->saveXML());
 
 file_put_contents('./SOAPDIAN21.xml', $soapdian21->xml);
 ```
+## Basic usage sing XAdES sha1
 
-## Basic usage sing sha256
+```php
+$pathCertificate = 'PATH_CERTIFICATE.p12';
+$passwors = 'PASSWORS_CERTIFICATE';
+
+$xmlString = <<<XML
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice>
+    <ext:UBLExtensions>
+        <ext:UBLExtension>
+            <ext:ExtensionContent/>
+        </ext:UBLExtension>
+        <ext:UBLExtension>
+            <ext:ExtensionContent/>
+        </ext:UBLExtension>
+    </ext:UBLExtensions>
+</Invoice>
+XML;
+
+$domDocument = new DOMDocument();
+$domDocument->loadXML($xmlString);
+
+$xadesDIAN = new XAdESDIAN($pathCertificate, $passwors, $this->xmlString, XAdESDIAN::ALGO_SHA1);
+
+file_put_contents('./SING1.xml', $xadesDIAN->xml);
+```
+
+## Basic usage sing XAdES sha256
 
 ```php
 $pathCertificate = 'PATH_CERTIFICATE.p12';
@@ -72,7 +97,7 @@ $xadesDIAN = new XAdESDIAN($pathCertificate, $passwors, $this->xmlString);
 file_put_contents('./SING256.xml', $xadesDIAN->xml);
 ```
 
-## Basic usage sing sha512
+## Basic usage sing XAdES sha512
 
 ```php
 $pathCertificate = 'PATH_CERTIFICATE.p12';
@@ -107,5 +132,5 @@ file_put_contents('./SING512.xml', $xadesDIAN->xml);
 ## Donation
 If this library help you reduce time to develop, you can give me a cup of coffee :smiley:.
 
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=4CRKGHBJAY2SJ&source=url)
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/stenfrank/1?locale.x=es_XC)
  

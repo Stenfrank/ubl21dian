@@ -1,18 +1,19 @@
 {
-    "name": "stenfrank/soap-dian",
+    "name": "stenfrank/ubl21dian",
     "type": "library",
-    "description": "Web Service consumption of the DIAN SOAP UBL 2.1",
+    "description": "Core for electronic invoicing pre-validation - DIAN UBL 2.1",
     "homepage": "https://soenac.com",
     "keywords": [
         "soap dian",
         "web service",
         "dian",
         "xml",
-        "ubl"
+        "ubl",
+        "core"
     ],
     "support": {
-        "issues": "https://github.com/Stenfrank/soap-dian/issues",
-        "source": "https://github.com/Stenfrank/soap-dian"
+        "issues": "https://github.com/Stenfrank/ubl21dian/issues",
+        "source": "https://github.com/Stenfrank/ubl21dian"
     },
     "license": "MIT",
     "authors": [
@@ -37,7 +38,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Stenfrank\\SoapDIAN\\": "src/"
+            "Stenfrank\\UBL21dian\\": "src/"
         }
     },
     "autoload-dev": {

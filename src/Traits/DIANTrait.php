@@ -1,6 +1,6 @@
 <?php
 
-namespace Stenfrank\SoapDIAN\Traits;
+namespace Stenfrank\UBL21dian\Traits;
 
 use Exception;
 
