@@ -10,7 +10,7 @@ Core for electronic invoicing pre-validation - DIAN UBL 2.1.
 Install with [`composer.phar`](http://getcomposer.org).
 
 ```sh
-composer require stenfrank/soap-dian
+composer require stenfrank/ubl21dian
 ```
 
 ## Basic usage soap
