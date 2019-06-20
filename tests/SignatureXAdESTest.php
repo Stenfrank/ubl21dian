@@ -608,9 +608,9 @@ XML;
         $domDocumentValidate = new DOMDocument;
         $domDocumentValidate->validateOnParse = true;
         
-        $this->assertSame(true, $domDocumentValidate->loadXML($xadesDIAN->xml));
+        $this->assertContains('Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha1"', $xadesDIAN->xml);
         
-        file_put_contents('/home/frank/public_html/Project/ubl-21-dian/SING1.xml', $xadesDIAN->xml);
+        $this->assertSame(true, $domDocumentValidate->loadXML($xadesDIAN->xml));
     }
     
     /** @test */
@@ -622,6 +622,8 @@ XML;
         
         $domDocumentValidate = new DOMDocument;
         $domDocumentValidate->validateOnParse = true;
+        
+        $this->assertContains('Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"', $xadesDIAN->xml);
         
         $this->assertSame(true, $domDocumentValidate->loadXML($xadesDIAN->xml));
     }
@@ -636,6 +638,49 @@ XML;
         $domDocumentValidate = new DOMDocument;
         $domDocumentValidate->validateOnParse = true;
         
+        $this->assertContains('Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"', $xadesDIAN->xml);
+        
+        $this->assertSame(true, $domDocumentValidate->loadXML($xadesDIAN->xml));
+    }
+    
+    /** @test */
+    function it_generates_signature_XAdES_and_software_security_code() {
+        $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
+        $passwors = '3T3rN4661343';
+        
+        $xadesDIAN = new XAdESDIAN($pathCertificate, $passwors);
+        
+        // Software security code
+        $xadesDIAN->softwareID = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
+        $xadesDIAN->pin = '12345';
+        
+        // Sign
+        $xadesDIAN->sign($this->xmlString);
+        
+        $domDocumentValidate = new DOMDocument;
+        $domDocumentValidate->validateOnParse = true;
+        
+        $this->assertContains('54d15940890b5ed395e7476d294a972cee650200942adb7a899de35cb0cf22f98831e7c9a95d90b961c6845340b09efd', $xadesDIAN->xml);
+        $this->assertSame(true, $domDocumentValidate->loadXML($xadesDIAN->xml));
+    }
+    
+    /** @test */
+    function it_generates_signature_XAdES_and_calculate_cufe() {
+        $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
+        $passwors = '3T3rN4661343';
+        
+        $xadesDIAN = new XAdESDIAN($pathCertificate, $passwors);
+        
+        // CUFE
+        $xadesDIAN->technicalKey = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+        
+        // Sign
+        $xadesDIAN->sign($this->xmlString);
+        
+        $domDocumentValidate = new DOMDocument;
+        $domDocumentValidate->validateOnParse = true;
+        
+        $this->assertContains('d48db2461fc229b54a1b92df388fc66844d23cddd120bf0cc952dda6243c9db9046b23ca3cea0185aac2a985d1fb6c7c', $xadesDIAN->xml);
         $this->assertSame(true, $domDocumentValidate->loadXML($xadesDIAN->xml));
     }
 }

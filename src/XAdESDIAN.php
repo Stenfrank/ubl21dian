@@ -3,7 +3,8 @@
 namespace Stenfrank\UBL21dian;
 
 use Carbon\Carbon;
-use DOMDocument;
+use DOMDocument,
+    DOMXPath;
 
 /**
  * 
@@ -119,7 +120,7 @@ class XAdESDIAN extends Sing
      */
     private $extracerts = [];
     
-    public function __construct($pathCertificate = null, $passwors = null, $xmlString = null, $algorithm = self::ALGO_SHA1) {
+    public function __construct($pathCertificate = null, $passwors = null, $xmlString = null, $algorithm = self::ALGO_SHA256) {
         $this->algorithm = $algorithm;
         
         parent::__construct($pathCertificate, $passwors, $xmlString);
@@ -136,6 +137,15 @@ class XAdESDIAN extends Sing
         
         $this->domDocument = new DOMDocument($this->version, $this->encoding);
         $this->domDocument->loadXML($this->xmlString);
+        
+        // DOMX path
+        $this->domXPath = new DOMXPath($this->domDocument);
+        
+        // Software security code
+        $this->softwareSecurityCode();
+        
+        // CUFE
+        $this->cufe();
         
         // Digest value xml clean
         $this->digestValueXML();
@@ -345,5 +355,28 @@ class XAdESDIAN extends Sing
      */
     private function digestValueXML() {
         $this->DigestValueXML = base64_encode(hash($this->algorithm['hash'], $this->domDocument->C14N(), true));
+    }
+    
+    /**
+     * Software security code
+     * @return void
+     */
+    private function softwareSecurityCode() {
+        if (is_null($this->softwareID) || is_null($this->pin)) return;
+        
+        $this->getTag('SoftwareSecurityCode', 0)->nodeValue = hash('sha384', "{$this->softwareID}{$this->pin}{$this->getTag('ID', 0)->nodeValue}");
+    }
+    
+    /**
+     * CUFE
+     * @return void
+     */
+    private function cufe() {
+        if (is_null($this->technicalKey)) return;
+        
+        // Register name space
+        foreach ($this->ns as $key => $value) $this->domXPath->registerNameSpace($key, $value);
+        
+        $this->getTag('UUID', 0)->nodeValue = hash('sha384', "{$this->getTag('ID', 0)->nodeValue}{$this->getTag('IssueDate', 0)->nodeValue}{$this->getTag('IssueTime', 0)->nodeValue}{$this->getQuery('cac:LegalMonetaryTotal/cbc:LineExtensionAmount')->nodeValue}01".($this->getQuery('cac:TaxTotal[cac:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID=01]/cbc:TaxAmount', false)->nodeValue ?? '0.00')."04".($this->getQuery('cac:TaxTotal[cac:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID=04]/cbc:TaxAmount', false)->nodeValue ?? '0.00')."03".($this->getQuery('cac:TaxTotal[cac:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID=03]/cbc:TaxAmount', false)->nodeValue ?? '0.00')."{$this->getQuery('cac:LegalMonetaryTotal/cbc:PayableAmount')->nodeValue}{$this->getQuery('cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID')->nodeValue}{$this->getQuery('cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID')->nodeValue}{$this->technicalKey}{$this->getTag('ProfileExecutionID', 0)->nodeValue}");
     }
 }

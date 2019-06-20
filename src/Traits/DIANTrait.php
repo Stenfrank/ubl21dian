@@ -79,6 +79,37 @@ trait DIANTrait
     }
     
     /**
+     * Get tag
+     * @param  string $tagName
+     * @param  int $item
+     * @return mixed
+     */
+    protected function getTag($tagName, $item = 0) {
+        $tag = $this->domDocument->documentElement->getElementsByTagName($tagName);
+        
+        if (is_null($tag->item(0))) throw new Exception('Class '.get_class($this).": The tag name {$tagName} does not exist.");
+        
+        return $tag->item($item);
+    }
+    
+    /**
+     * Get query
+     * @param  string  $query
+     * @param  boolean $validate
+     * @param  int  $item
+     * @return mixed
+     */
+    protected function getQuery($query, $validate = true, $item = 0) {
+        $tag = $this->domXPath->query($query);
+        
+        if (($validate) && ($tag->item(0) == null)) throw new Exception('Class '.get_class($this).": The query {$query} does not exist.");
+        
+        if (is_null($item)) return $tag;
+        
+        return $tag->item($item);
+    }
+    
+    /**
      * Join array
      * @param  array   $array
      * @param  boolean $formatNS

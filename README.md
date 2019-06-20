@@ -4,6 +4,7 @@ Core for electronic invoicing pre-validation - DIAN UBL 2.1.
 
 # Tags
 * 1.0: Contains valid tests with binary security token (SOAP) and XAdES signature (XML) with algorithms sha1, sha256 and sha512.
+* 1.1: Contains CUFE algorithms and Software Security Code.
 
 ## How to Install
 
@@ -123,6 +124,21 @@ $domDocument->loadXML($xmlString);
 $xadesDIAN = new XAdESDIAN($pathCertificate, $passwors, $this->xmlString, XAdESDIAN::ALGO_SHA512);
 
 file_put_contents('./SING512.xml', $xadesDIAN->xml);
+```
+
+## Calculate software security code
+```php
+
+// If you assign the values "softwareID" and "pin" the library will calculate and assign "Software Security Code" at the moment of signing the document.
+$xadesDIAN->softwareID = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
+$xadesDIAN->pin = '12345';
+```
+
+## Calculate "UUID" (CUFE)
+```php
+
+// If you assign the value "technicalKey" the library will calculate and assign "UUID" (CUFE) at the moment of signing the document
+$xadesDIAN->technicalKey = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 ```
 
 ## Authors
