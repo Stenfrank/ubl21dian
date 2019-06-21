@@ -92,7 +92,7 @@ XML;
 $domDocument = new DOMDocument();
 $domDocument->loadXML($xmlString);
 
-$xadesDIAN = new XAdESDIAN($pathCertificate, $passwors, $this->xmlString);
+$xadesDIAN = new XAdESDIAN($pathCertificate, $passwors, $xmlString);
 
 file_put_contents('./SING256.xml', $xadesDIAN->xml);
 ```
