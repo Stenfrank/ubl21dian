@@ -2,12 +2,11 @@
 
 namespace Stenfrank\UBL21dian;
 
+use DOMXPath,
+    DOMDocument;
 use Carbon\Carbon;
-use DOMDocument,
-    DOMXPath;
-
 /**
- * 
+ * XAdES DIAN
  */
 class XAdESDIAN extends Sing
 {

@@ -2,11 +2,11 @@
 
 namespace Stenfrank\Tests;
 
-use Stenfrank\UBL21dian\XAdESDIAN;
 use DOMDocument;
+use Stenfrank\UBL21dian\XAdESDIAN;
 
 /**
- * Sign soap test
+ * Signature XAdES test
  */
 class SignatureXAdESTest extends TestCase
 {

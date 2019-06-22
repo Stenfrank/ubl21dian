@@ -2,8 +2,8 @@
 
 namespace Stenfrank\Tests;
 
-use Stenfrank\UBL21dian\SOAPDIAN21;
 use DOMDocument;
+use Stenfrank\UBL21dian\SOAPDIAN21;
 
 /**
  * Sign soap test
