@@ -64,7 +64,7 @@ XML;
 $domDocument = new DOMDocument();
 $domDocument->loadXML($xmlString);
 
-$xadesDIAN = new XAdESDIAN($pathCertificate, $passwors, $this->xmlString, XAdESDIAN::ALGO_SHA1);
+$xadesDIAN = new XAdESDIAN($pathCertificate, $passwors, $xmlString, XAdESDIAN::ALGO_SHA1);
 
 file_put_contents('./SING1.xml', $xadesDIAN->xml);
 ```
@@ -92,7 +92,7 @@ XML;
 $domDocument = new DOMDocument();
 $domDocument->loadXML($xmlString);
 
-$xadesDIAN = new XAdESDIAN($pathCertificate, $passwors, $this->xmlString);
+$xadesDIAN = new XAdESDIAN($pathCertificate, $passwors, $xmlString);
 
 file_put_contents('./SING256.xml', $xadesDIAN->xml);
 ```
@@ -120,7 +120,7 @@ XML;
 $domDocument = new DOMDocument();
 $domDocument->loadXML($xmlString);
 
-$xadesDIAN = new XAdESDIAN($pathCertificate, $passwors, $this->xmlString, XAdESDIAN::ALGO_SHA512);
+$xadesDIAN = new XAdESDIAN($pathCertificate, $passwors, $xmlString, XAdESDIAN::ALGO_SHA512);
 
 file_put_contents('./SING512.xml', $xadesDIAN->xml);
 ```
