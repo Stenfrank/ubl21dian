@@ -5,6 +5,7 @@ Core for electronic invoicing pre-validation - DIAN UBL 2.1.
 # Tags
 * 1.0: Contains valid tests with binary security token (SOAP) and XAdES signature (XML) with algorithms sha1, sha256 and sha512.
 * 1.1: Contains main templates for Web Service consumption, require curl as a dependency.
+* 1.1.1: Canonization error is solved.
 
 ## How to Install
 
