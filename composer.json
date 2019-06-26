@@ -28,6 +28,7 @@
         "php": ">= 5.4",
         "ext-dom": "*",
         "ext-xml": "*",
+        "ext-curl": "*",
         "ext-libxml": "*",
         "ext-openssl": "*",
         "ext-xmlwriter": "*",

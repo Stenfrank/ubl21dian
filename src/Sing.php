@@ -31,7 +31,7 @@ abstract class Sing
         $this->readCerts();
         $this->identifiersReferences();
         
-        $this->sign();
+        if (!is_null($xmlString)) $this->sign();
         
         return $this;
     }
@@ -45,9 +45,9 @@ abstract class Sing
     }
     
     /**
-     * Start nodes
+     * Sign
      * @param  string $string
-     * @return void
+     * @return XAdESDIAN
      */
     public function sign($string = null) {
         if ($string != null) $this->xmlString = $string;
@@ -56,5 +56,7 @@ abstract class Sing
             $this->loadXML();
             $this->xml = $this->domDocument->saveXML();
         }
+        
+        return $this;
     }
 }
