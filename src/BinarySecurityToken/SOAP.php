@@ -1,13 +1,14 @@
 <?php
 
-namespace Stenfrank\UBL21dian;
+namespace Stenfrank\UBL21dian\BinarySecurityToken;
 
 use DOMDocument;
+use Stenfrank\UBL21dian\Sign;
 
 /**
- * SOAP DIAN 21 - Web Service of tests and production
+ * SOAP
  */
-class SOAPDIAN21 extends Sing
+class SOAP extends Sign
 {
     /**
      * ADDRESSING

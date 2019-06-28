@@ -3,12 +3,12 @@
 namespace Stenfrank\Tests;
 
 use DOMDocument;
-use Stenfrank\UBL21dian\XAdESDIAN;
+use Stenfrank\UBL21dian\XAdES\SignInvoice;
 
 /**
- * Signature XAdES test
+ * Signatures Bills Test
  */
-class SignatureXAdESTest extends TestCase
+class SignaturesBillsTest extends TestCase
 {
     /**
      * XML Template
@@ -21,7 +21,7 @@ class SignatureXAdESTest extends TestCase
     xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2"
     xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2"
     xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2"
-    xmlns:sts="urn:dian:gov:co:facturaelectronica:Structures-2-1"
+    xmlns:sts="http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures"
     xmlns:xades="http://uri.etsi.org/01903/v1.3.2#"
     xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -603,14 +603,14 @@ XML;
         $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
         $passwors = '3T3rN4661343';
         
-        $xadesDIAN = new XAdESDIAN($pathCertificate, $passwors, $this->xmlString, XAdESDIAN::ALGO_SHA1);
+        $signInvoice = new SignInvoice($pathCertificate, $passwors, $this->xmlString, SignInvoice::ALGO_SHA1);
         
         $domDocumentValidate = new DOMDocument;
         $domDocumentValidate->validateOnParse = true;
         
-        $this->assertContains('Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha1"', $xadesDIAN->xml);
+        $this->assertContains('Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha1"', $signInvoice->xml);
         
-        $this->assertSame(true, $domDocumentValidate->loadXML($xadesDIAN->xml));
+        $this->assertSame(true, $domDocumentValidate->loadXML($signInvoice->xml));
     }
     
     /** @test */
@@ -618,14 +618,14 @@ XML;
         $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
         $passwors = '3T3rN4661343';
         
-        $xadesDIAN = new XAdESDIAN($pathCertificate, $passwors, $this->xmlString);
+        $signInvoice = new SignInvoice($pathCertificate, $passwors, $this->xmlString);
         
         $domDocumentValidate = new DOMDocument;
         $domDocumentValidate->validateOnParse = true;
         
-        $this->assertContains('Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"', $xadesDIAN->xml);
+        $this->assertContains('Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"', $signInvoice->xml);
         
-        $this->assertSame(true, $domDocumentValidate->loadXML($xadesDIAN->xml));
+        $this->assertSame(true, $domDocumentValidate->loadXML($signInvoice->xml));
     }
     
     /** @test */
@@ -633,14 +633,14 @@ XML;
         $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
         $passwors = '3T3rN4661343';
         
-        $xadesDIAN = new XAdESDIAN($pathCertificate, $passwors, $this->xmlString, XAdESDIAN::ALGO_SHA512);
+        $signInvoice = new SignInvoice($pathCertificate, $passwors, $this->xmlString, SignInvoice::ALGO_SHA512);
         
         $domDocumentValidate = new DOMDocument;
         $domDocumentValidate->validateOnParse = true;
         
-        $this->assertContains('Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"', $xadesDIAN->xml);
+        $this->assertContains('Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"', $signInvoice->xml);
         
-        $this->assertSame(true, $domDocumentValidate->loadXML($xadesDIAN->xml));
+        $this->assertSame(true, $domDocumentValidate->loadXML($signInvoice->xml));
     }
     
     /** @test */
@@ -648,20 +648,20 @@ XML;
         $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
         $passwors = '3T3rN4661343';
         
-        $xadesDIAN = new XAdESDIAN($pathCertificate, $passwors);
+        $signInvoice = new SignInvoice($pathCertificate, $passwors);
         
         // Software security code
-        $xadesDIAN->softwareID = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
-        $xadesDIAN->pin = '12345';
+        $signInvoice->softwareID = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
+        $signInvoice->pin = '12345';
         
         // Sign
-        $xadesDIAN->sign($this->xmlString);
+        $signInvoice->sign($this->xmlString);
         
         $domDocumentValidate = new DOMDocument;
         $domDocumentValidate->validateOnParse = true;
         
-        $this->assertContains('54d15940890b5ed395e7476d294a972cee650200942adb7a899de35cb0cf22f98831e7c9a95d90b961c6845340b09efd', $xadesDIAN->xml);
-        $this->assertSame(true, $domDocumentValidate->loadXML($xadesDIAN->xml));
+        $this->assertContains('54d15940890b5ed395e7476d294a972cee650200942adb7a899de35cb0cf22f98831e7c9a95d90b961c6845340b09efd', $signInvoice->xml);
+        $this->assertSame(true, $domDocumentValidate->loadXML($signInvoice->xml));
     }
     
     /** @test */
@@ -669,18 +669,18 @@ XML;
         $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
         $passwors = '3T3rN4661343';
         
-        $xadesDIAN = new XAdESDIAN($pathCertificate, $passwors);
+        $signInvoice = new SignInvoice($pathCertificate, $passwors);
         
         // CUFE
-        $xadesDIAN->technicalKey = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
+        $signInvoice->technicalKey = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
         
         // Sign
-        $xadesDIAN->sign($this->xmlString);
+        $signInvoice->sign($this->xmlString);
         
         $domDocumentValidate = new DOMDocument;
         $domDocumentValidate->validateOnParse = true;
         
-        $this->assertContains('d48db2461fc229b54a1b92df388fc66844d23cddd120bf0cc952dda6243c9db9046b23ca3cea0185aac2a985d1fb6c7c', $xadesDIAN->xml);
-        $this->assertSame(true, $domDocumentValidate->loadXML($xadesDIAN->xml));
+        $this->assertContains('d48db2461fc229b54a1b92df388fc66844d23cddd120bf0cc952dda6243c9db9046b23ca3cea0185aac2a985d1fb6c7c', $signInvoice->xml);
+        $this->assertSame(true, $domDocumentValidate->loadXML($signInvoice->xml));
     }
 }

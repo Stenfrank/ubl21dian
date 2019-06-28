@@ -4,12 +4,12 @@ namespace Stenfrank\UBL21dian\Templates;
 
 use Exception;
 use Stenfrank\UBL21dian\Client;
-use Stenfrank\UBL21dian\SOAPDIAN21;
+use Stenfrank\UBL21dian\BinarySecurityToken\SOAP;
 
 /**
  * Template
  */
-class Template extends SOAPDIAN21
+class Template extends SOAP
 {
     /**
      * To
@@ -25,9 +25,9 @@ class Template extends SOAPDIAN21
     
     /**
      * Sign
-     * @return \Stenfrank\UBL21dian\SOAPDIAN21
+     * @return \Stenfrank\UBL21dian\BinarySecurityToken\SOAP
      */
-    public function sign($string = null): SOAPDIAN21 {
+    public function sign($string = null): SOAP {
         $this->requiredProperties();
         
         return parent::sign($this->createTemplate());

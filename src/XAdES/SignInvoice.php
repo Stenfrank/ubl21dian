@@ -1,14 +1,16 @@
 <?php
 
-namespace Stenfrank\UBL21dian;
+namespace Stenfrank\UBL21dian\XAdES;
 
 use DOMXPath,
     DOMDocument;
 use Carbon\Carbon;
+use Stenfrank\UBL21dian\Sign;
+
 /**
- * XAdES DIAN
+ * Sign Invoice
  */
-class XAdESDIAN extends Sing
+class SignInvoice extends Sign
 {
     /**
      * XMLDSIG
@@ -99,8 +101,8 @@ class XAdESDIAN extends Sing
         'xmlns:cac' => 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2',
         'xmlns:ext' => 'urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2',
         'xmlns:cbc' => 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2',
+        'xmlns:sts' => 'http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures',
         'xmlns' => 'urn:oasis:names:specification:ubl:schema:xsd:Invoice-2',
-        'xmlns:sts' => 'urn:dian:gov:co:facturaelectronica:Structures-2-1',
         'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
         'xmlns:xades141' => 'http://uri.etsi.org/01903/v1.4.1#',
         'xmlns:xades' => 'http://uri.etsi.org/01903/v1.3.2#',
@@ -143,8 +145,8 @@ class XAdESDIAN extends Sing
         // Software security code
         $this->softwareSecurityCode();
         
-        // CUFE
-        $this->cufe();
+        // UUID
+        $this->setUUID();
         
         // Digest value xml clean
         $this->digestValueXML();
@@ -367,15 +369,29 @@ class XAdESDIAN extends Sing
     }
     
     /**
+     * set UUID
+     */
+    private function setUUID() {
+        // Register name space
+        foreach ($this->ns as $key => $value) $this->domXPath->registerNameSpace($key, $value);
+        
+        if ((!is_null($this->pin)) && (is_null($this->technicalKey))) $this->cude();
+        if (!is_null($this->technicalKey)) $this->cufe();
+    }
+    
+    /**
      * CUFE
      * @return void
      */
     private function cufe() {
-        if (is_null($this->technicalKey)) return;
-        
-        // Register name space
-        foreach ($this->ns as $key => $value) $this->domXPath->registerNameSpace($key, $value);
-        
         $this->getTag('UUID', 0)->nodeValue = hash('sha384', "{$this->getTag('ID', 0)->nodeValue}{$this->getTag('IssueDate', 0)->nodeValue}{$this->getTag('IssueTime', 0)->nodeValue}{$this->getQuery('cac:LegalMonetaryTotal/cbc:LineExtensionAmount')->nodeValue}01".($this->getQuery('cac:TaxTotal[cac:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID=01]/cbc:TaxAmount', false)->nodeValue ?? '0.00')."04".($this->getQuery('cac:TaxTotal[cac:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID=04]/cbc:TaxAmount', false)->nodeValue ?? '0.00')."03".($this->getQuery('cac:TaxTotal[cac:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID=03]/cbc:TaxAmount', false)->nodeValue ?? '0.00')."{$this->getQuery('cac:LegalMonetaryTotal/cbc:PayableAmount')->nodeValue}{$this->getQuery('cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID')->nodeValue}{$this->getQuery('cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID')->nodeValue}{$this->technicalKey}{$this->getTag('ProfileExecutionID', 0)->nodeValue}");
+    }
+    
+    /**
+     * Cude
+     * @return void
+     */
+    private function cude() {
+        $this->getTag('UUID', 0)->nodeValue = hash('sha384', "{$this->getTag('ID', 0)->nodeValue}{$this->getTag('IssueDate', 0)->nodeValue}{$this->getTag('IssueTime', 0)->nodeValue}{$this->getQuery('cac:LegalMonetaryTotal/cbc:LineExtensionAmount')->nodeValue}01".($this->getQuery('cac:TaxTotal[cac:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID=01]/cbc:TaxAmount', false)->nodeValue ?? '0.00')."04".($this->getQuery('cac:TaxTotal[cac:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID=04]/cbc:TaxAmount', false)->nodeValue ?? '0.00')."03".($this->getQuery('cac:TaxTotal[cac:TaxSubtotal/cac:TaxCategory/cac:TaxScheme/cbc:ID=03]/cbc:TaxAmount', false)->nodeValue ?? '0.00')."{$this->getQuery('cac:LegalMonetaryTotal/cbc:PayableAmount')->nodeValue}{$this->getQuery('cac:AccountingSupplierParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID')->nodeValue}{$this->getQuery('cac:AccountingCustomerParty/cac:Party/cac:PartyTaxScheme/cbc:CompanyID')->nodeValue}{$this->pin}{$this->getTag('ProfileExecutionID', 0)->nodeValue}");
     }
 }

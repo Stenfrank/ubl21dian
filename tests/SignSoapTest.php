@@ -3,7 +3,7 @@
 namespace Stenfrank\Tests;
 
 use DOMDocument;
-use Stenfrank\UBL21dian\SOAPDIAN21;
+use Stenfrank\UBL21dian\BinarySecurityToken\SOAP;
 
 /**
  * Sign soap test
@@ -31,7 +31,7 @@ XML;
         $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
         $passwors = '3T3rN4661343';
         
-        $soap21 = new SOAPDIAN21($pathCertificate, $passwors, $this->xmlString);
+        $soap21 = new SOAP($pathCertificate, $passwors, $this->xmlString);
         
         $domDocumentValidate = new DOMDocument;
         $domDocumentValidate->validateOnParse = true;
@@ -47,7 +47,7 @@ XML;
         $domDocument = new DOMDocument();
         $domDocument->loadXML($this->xmlString);
         
-        $soap21 = new SOAPDIAN21($pathCertificate, $passwors);
+        $soap21 = new SOAP($pathCertificate, $passwors);
         $soap21->Action = 'http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatus';
         $soap21->To = 'https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc';
         $soap21->CurrentTime = time();

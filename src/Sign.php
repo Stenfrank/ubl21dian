@@ -5,9 +5,9 @@ namespace Stenfrank\UBL21dian;
 use Stenfrank\UBL21dian\Traits\DIANTrait;
 
 /**
- * 
+ * Sign
  */
-abstract class Sing
+abstract class Sign
 {
     use DIANTrait;
     
