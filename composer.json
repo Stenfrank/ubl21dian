@@ -15,7 +15,7 @@
         "issues": "https://github.com/Stenfrank/ubl21dian/issues",
         "source": "https://github.com/Stenfrank/ubl21dian"
     },
-    "license": "MIT",
+    "license": "LGPL-3.0",
     "authors": [
         {
             "name": "Stenfrank",
