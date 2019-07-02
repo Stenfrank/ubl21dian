@@ -3,9 +3,8 @@
 namespace Stenfrank\Tests;
 
 /**
- * Test case
+ * Test case.
  */
 class TestCase extends \PHPUnit\Framework\TestCase
 {
-
 }

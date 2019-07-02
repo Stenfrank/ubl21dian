@@ -2,10 +2,10 @@
 
 namespace Stenfrank\UBL21dian\Templates;
 
-interface CreateTemplate {
+interface CreateTemplate
+{
     /**
-     * Create template
-     * @return void
+     * Create template.
      */
     public function createTemplate();
 }

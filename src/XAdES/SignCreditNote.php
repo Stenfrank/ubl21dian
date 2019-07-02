@@ -3,12 +3,13 @@
 namespace Stenfrank\UBL21dian\XAdES;
 
 /**
- * Sign Credit Note
+ * Sign Credit Note.
  */
 class SignCreditNote extends SignInvoice
 {
     /**
-     * NS
+     * NS.
+     *
      * @var array
      */
     public $ns = [
@@ -20,6 +21,6 @@ class SignCreditNote extends SignInvoice
         'xmlns:xsi' => 'http://www.w3.org/2001/XMLSchema-instance',
         'xmlns:xades141' => 'http://uri.etsi.org/01903/v1.4.1#',
         'xmlns:xades' => 'http://uri.etsi.org/01903/v1.3.2#',
-        'xmlns:ds' => SignInvoice::XMLDSIG
+        'xmlns:ds' => SignInvoice::XMLDSIG,
     ];
 }

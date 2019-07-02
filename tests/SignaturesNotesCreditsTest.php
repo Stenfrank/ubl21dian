@@ -6,12 +6,13 @@ use DOMDocument;
 use Stenfrank\UBL21dian\XAdES\SignCreditNote;
 
 /**
- * Signatures Notes Credits
+ * Signatures Notes Credits.
  */
 class SignaturesNotesCreditsTest extends TestCase
 {
     /**
-     * XML Template
+     * XML Template.
+     *
      * @var string
      */
     private $xmlString = <<<XML
@@ -195,89 +196,94 @@ class SignaturesNotesCreditsTest extends TestCase
     </cac:CreditNoteLine>
 </CreditNote>
 XML;
-    
+
     /** @test */
-    function it_generates_signature_XAdES_sha1() {
+    public function it_generates_signature_XAdES_sha1()
+    {
         $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
         $passwors = '3T3rN4661343';
-        
+
         $signCreditNote = new SignCreditNote($pathCertificate, $passwors, $this->xmlString, SignCreditNote::ALGO_SHA1);
-        
-        $domDocumentValidate = new DOMDocument;
+
+        $domDocumentValidate = new DOMDocument();
         $domDocumentValidate->validateOnParse = true;
-        
+
         $this->assertContains('Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha1"', $signCreditNote->xml);
-        
+
         $this->assertSame(true, $domDocumentValidate->loadXML($signCreditNote->xml));
     }
-    
+
     /** @test */
-    function it_generates_signature_XAdES_sha256() {
+    public function it_generates_signature_XAdES_sha256()
+    {
         $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
         $passwors = '3T3rN4661343';
-        
+
         $signCreditNote = new SignCreditNote($pathCertificate, $passwors, $this->xmlString);
-        
-        $domDocumentValidate = new DOMDocument;
+
+        $domDocumentValidate = new DOMDocument();
         $domDocumentValidate->validateOnParse = true;
-        
+
         $this->assertContains('Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"', $signCreditNote->xml);
-        
+
         $this->assertSame(true, $domDocumentValidate->loadXML($signCreditNote->xml));
     }
-    
+
     /** @test */
-    function it_generates_signature_XAdES_sha512() {
+    public function it_generates_signature_XAdES_sha512()
+    {
         $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
         $passwors = '3T3rN4661343';
-        
+
         $signCreditNote = new SignCreditNote($pathCertificate, $passwors, $this->xmlString, SignCreditNote::ALGO_SHA512);
-        
-        $domDocumentValidate = new DOMDocument;
+
+        $domDocumentValidate = new DOMDocument();
         $domDocumentValidate->validateOnParse = true;
-        
+
         $this->assertContains('Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"', $signCreditNote->xml);
-        
+
         $this->assertSame(true, $domDocumentValidate->loadXML($signCreditNote->xml));
     }
-    
+
     /** @test */
-    function it_generates_signature_XAdES_and_software_security_code() {
+    public function it_generates_signature_XAdES_and_software_security_code()
+    {
         $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
         $passwors = '3T3rN4661343';
-        
+
         $signCreditNote = new SignCreditNote($pathCertificate, $passwors);
-        
+
         // Software security code
         $signCreditNote->softwareID = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
         $signCreditNote->pin = '12345';
-        
+
         // Sign
         $signCreditNote->sign($this->xmlString);
-        
-        $domDocumentValidate = new DOMDocument;
+
+        $domDocumentValidate = new DOMDocument();
         $domDocumentValidate->validateOnParse = true;
-        
+
         $this->assertContains('eb7ff57a48c4bc5840e846382346e2a5546a3903c150fdf34bec4e7e8fb29c6437ef9c99575f0f78f80f7dfcc97d3e02', $signCreditNote->xml);
         $this->assertSame(true, $domDocumentValidate->loadXML($signCreditNote->xml));
     }
-    
+
     /** @test */
-    function it_generates_signature_XAdES_and_calculate_cude() {
+    public function it_generates_signature_XAdES_and_calculate_cude()
+    {
         $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
         $passwors = '3T3rN4661343';
-        
+
         $signCreditNote = new SignCreditNote($pathCertificate, $passwors);
-        
+
         // CUDE
         $signCreditNote->pin = 'xxxxx';
-        
+
         // Sign
         $signCreditNote->sign($this->xmlString);
-        
-        $domDocumentValidate = new DOMDocument;
+
+        $domDocumentValidate = new DOMDocument();
         $domDocumentValidate->validateOnParse = true;
-        
+
         $this->assertContains('60a024139af65a986830609895271ad17f4d5d51effc4d8ad9db09096bce5786bba43003fd47211d72417866bc61642c', $signCreditNote->xml);
         $this->assertSame(true, $domDocumentValidate->loadXML($signCreditNote->xml));
     }

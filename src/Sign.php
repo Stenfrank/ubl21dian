@@ -5,58 +5,70 @@ namespace Stenfrank\UBL21dian;
 use Stenfrank\UBL21dian\Traits\DIANTrait;
 
 /**
- * Sign
+ * Sign.
  */
 abstract class Sign
 {
     use DIANTrait;
-    
+
     /**
-     * Abstract loadXML
+     * Abstract loadXML.
+     *
      * @var void
      */
     abstract protected function loadXML();
-    
+
     /**
-     * Construct
+     * Construct.
+     *
      * @param string $pathCertificate
      * @param string $passwors
      * @param string $xmlString
      */
-    public function __construct($pathCertificate = null, $passwors = null, $xmlString = null) {
+    public function __construct($pathCertificate = null, $passwors = null, $xmlString = null)
+    {
         $this->pathCertificate = $pathCertificate;
         $this->passwors = $passwors;
         $this->xmlString = $xmlString;
-        
+
         $this->readCerts();
         $this->identifiersReferences();
-        
-        if (!is_null($xmlString)) $this->sign();
-        
+
+        if (!is_null($xmlString)) {
+            $this->sign();
+        }
+
         return $this;
     }
-    
+
     /**
-     * Get document
+     * Get document.
+     *
      * @return DOMDocument
      */
-    public function getDocument() {
+    public function getDocument()
+    {
         return $this->domDocument;
     }
-    
+
     /**
-     * Sign
-     * @param  string $string
+     * Sign.
+     *
+     * @param string $string
+     *
      * @return XAdESDIAN
      */
-    public function sign($string = null) {
-        if ($string != null) $this->xmlString = $string;
-        
+    public function sign($string = null)
+    {
+        if (null != $string) {
+            $this->xmlString = $string;
+        }
+
         if (!is_null($this->xmlString)) {
             $this->loadXML();
             $this->xml = $this->domDocument->saveXML();
         }
-        
+
         return $this;
     }
 }

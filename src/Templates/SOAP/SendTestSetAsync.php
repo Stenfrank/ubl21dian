@@ -6,18 +6,20 @@ use Stenfrank\UBL21dian\Templates\Template;
 use Stenfrank\UBL21dian\Templates\CreateTemplate;
 
 /**
- * Send test set async
+ * Send test set async.
  */
 class SendTestSetAsync extends Template implements CreateTemplate
 {
     /**
-     * Action
+     * Action.
+     *
      * @var string
      */
     public $Action = 'http://wcf.dian.colombia/IWcfDianCustomerServices/SendTestSetAsync';
-    
+
     /**
-     * Required properties
+     * Required properties.
+     *
      * @var array
      */
     protected $requiredProperties = [
@@ -25,21 +27,25 @@ class SendTestSetAsync extends Template implements CreateTemplate
         'contentFile',
         'testSetId',
     ];
-    
+
     /**
-     * Construct
+     * Construct.
+     *
      * @param string $pathCertificate
      * @param string $passwors
      */
-    public function __construct($pathCertificate, $passwors) {
+    public function __construct($pathCertificate, $passwors)
+    {
         parent::__construct($pathCertificate, $passwors);
     }
-    
+
     /**
-     * Create template
+     * Create template.
+     *
      * @return string
      */
-    public function createTemplate() {
+    public function createTemplate()
+    {
         return $this->templateXMLSOAP = <<<XML
 <soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:wcf="http://wcf.dian.colombia">
     <soap:Body>
