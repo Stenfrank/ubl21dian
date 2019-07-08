@@ -19,6 +19,13 @@ class Client
     private $curl;
 
     /**
+     * to.
+     *
+     * @var string
+     */
+    private $to;
+
+    /**
      * Response.
      *
      * @var string
@@ -34,7 +41,7 @@ class Client
     {
         $this->curl = curl_init();
 
-        curl_setopt($this->curl, CURLOPT_URL, $template->To);
+        curl_setopt($this->curl, CURLOPT_URL, $this->to = $template->To);
         curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 180);
         curl_setopt($this->curl, CURLOPT_TIMEOUT, 180);
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
@@ -43,6 +50,7 @@ class Client
         curl_setopt($this->curl, CURLOPT_POST, true);
         curl_setopt($this->curl, CURLOPT_POSTFIELDS, $template->xml);
         curl_setopt($this->curl, CURLOPT_HTTPHEADER, [
+            'Accept: application/xml',
             'Content-type: application/soap+xml',
             'Content-length: '.strlen($template->xml),
         ]);
@@ -79,10 +87,14 @@ class Client
      */
     public function getResponseToObject()
     {
-        $xmlResponse = new DOMDocument();
-        $xmlResponse->loadXML($this->response);
+        try {
+            $xmlResponse = new DOMDocument();
+            $xmlResponse->loadXML($this->response);
 
-        return $this->xmlToObject($xmlResponse);
+            return $this->xmlToObject($xmlResponse);
+        } catch (\Exception $e) {
+            throw new Exception('Class '.get_class($this).': '.$this->to.' '.$this->response);
+        }
     }
 
     /**

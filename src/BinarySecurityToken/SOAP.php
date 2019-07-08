@@ -2,6 +2,7 @@
 
 namespace Stenfrank\UBL21dian\BinarySecurityToken;
 
+use Exception;
 use DOMDocument;
 use Stenfrank\UBL21dian\Sign;
 
@@ -276,7 +277,7 @@ class SOAP extends Sign
         $domDocument->loadXML(str_replace('<ds:SignedInfo', "<ds:SignedInfo {$this->joinArray($this->signedInfoNS)}", $string ?? $this->domDocument->saveXML($this->signedInfo)));
 
         if (!openssl_sign($domDocument->C14N(), $sing, $this->certs['pkey'], 'RSA-SHA256')) {
-            die('Failure Signing Data: '.openssl_error_string().' - RSA-SHA256');
+            throw new Exception('Class '.get_class($this).': Failure Signing Data: '.openssl_error_string().' - RSA-SHA256');
         }
 
         $sing = base64_encode($sing);

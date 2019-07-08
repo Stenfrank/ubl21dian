@@ -16,7 +16,7 @@ class Template extends SOAP
      *
      * @var string
      */
-    public $To = 'https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc';
+    public $To = 'https://vpfe-hab.dian.gov.co/WcfDianCustomerServices.svc?wsdl';
 
     /**
      * Template.
