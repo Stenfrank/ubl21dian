@@ -60,7 +60,7 @@ abstract class Sign
      */
     public function sign($string = null)
     {
-        if (null != $string) {
+        if (!is_null($string)) {
             $this->xmlString = $string;
         }
 
