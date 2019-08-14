@@ -36,6 +36,7 @@ class Client
      * Construct.
      *
      * @param \Stenfrank\UBL21dian\Templates\Template $template
+     * @throws Exception
      */
     public function __construct(Template $template)
     {
@@ -45,8 +46,6 @@ class Client
         curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 180);
         curl_setopt($this->curl, CURLOPT_TIMEOUT, 180);
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($this->curl, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($this->curl, CURLOPT_POST, true);
         curl_setopt($this->curl, CURLOPT_POSTFIELDS, $template->xml);
         curl_setopt($this->curl, CURLOPT_HTTPHEADER, [
@@ -57,11 +56,11 @@ class Client
 
         $this->exec();
 
-        return $this;
     }
 
     /**
      * Exec.
+     * @throws Exception
      */
     private function exec()
     {
@@ -81,17 +80,27 @@ class Client
     }
 
     /**
+     * Devuelve el objeto dom de la respuesta
+     * @return DOMDocument
+     */
+    public function getResponseToDOM()
+    {
+        $xmlResponse = new DOMDocument();
+        $xmlResponse->loadXML($this->response);
+        return $xmlResponse;
+    }
+
+
+    /**
      * Get response to object.
      *
      * @return object
+     * @throws Exception
      */
     public function getResponseToObject()
     {
         try {
-            $xmlResponse = new DOMDocument();
-            $xmlResponse->loadXML($this->response);
-
-            return $this->xmlToObject($xmlResponse);
+            return $this->xmlToObject($this->getResponseToDOM());
         } catch (\Exception $e) {
             throw new Exception('Class '.get_class($this).': '.$this->to.' '.$this->response);
         }
@@ -149,6 +158,10 @@ class Client
         return (object) $dataXML;
     }
 
+    /**
+     * @return string
+     * @throws Exception
+     */
     public function __toString()
     {
         return json_encode($this->getResponseToObject());

@@ -41,6 +41,7 @@ class Template extends SOAP
      * Sign to send.
      *
      * @return \Stenfrank\UBL21dian\Client
+     * @throws Exception
      */
     public function signToSend(): Client
     {
@@ -53,6 +54,7 @@ class Template extends SOAP
 
     /**
      * Required properties.
+     * @throws Exception
      */
     private function requiredProperties()
     {

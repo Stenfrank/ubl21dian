@@ -1,8 +1,11 @@
 <?php
-
 namespace Stenfrank\UBL21dian\Traits;
 
-use Exception;
+use Stenfrank\UBL21dian\Exceptions\CertificateNotFountException;
+use Stenfrank\UBL21dian\Exceptions\FailedReadCertificateException;
+use Stenfrank\UBL21dian\Exceptions\Failedx509ExportCertificateException;
+use Stenfrank\UBL21dian\Exceptions\QueryNotFountException;
+use Stenfrank\UBL21dian\Exceptions\TagNameNotFountException;
 
 /**
  * DIAN trait.
@@ -39,19 +42,24 @@ trait DIANTrait
 
     /**
      * Read certs.
+     * @throws \Stenfrank\UBL21dian\Exceptions\CertificateNotFountException
+     * @throws FailedReadCertificateException
      */
     protected function readCerts()
     {
+        //Se virifica que el path del certificado y el password del ceriticado exista
         if (is_null($this->pathCertificate) || is_null($this->passwors)) {
-            throw new Exception('Class '.get_class($this).': requires the certificate path and password.');
+            throw new CertificateNotFountException(get_class($this));
         }
+        //Se compueba que se pueda leer el certificado con el password
         if (!openssl_pkcs12_read(file_get_contents($this->pathCertificate), $this->certs, $this->passwors)) {
-            throw new Exception('Class '.get_class($this).': Failure signing data: '.openssl_error_string());
+            throw new FailedReadCertificateException(get_class($this));
         }
     }
 
     /**
      * X509 export.
+     * @throws Failedx509ExportCertificateException
      */
     protected function x509Export()
     {
@@ -61,7 +69,7 @@ trait DIANTrait
             return str_replace([PHP_EOL, '-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----'], '', $stringCert);
         }
 
-        throw new Exception('Class '.get_class($this).': Error openssl x509 export.');
+        throw new Failedx509ExportCertificateException(get_class($this));
     }
 
     /**
@@ -70,7 +78,7 @@ trait DIANTrait
     protected function identifiersReferences()
     {
         foreach ($this->ids as $key => $value) {
-            $this->$key = mb_strtoupper("{$value}-".sha1(uniqid()));
+            $this->$key = mb_strtoupper("{$value}-".sha1(uniqid('', true)));
         }
     }
 
@@ -92,16 +100,16 @@ trait DIANTrait
      * Get tag.
      *
      * @param string $tagName
-     * @param int    $item
-     *
+     * @param int $item
      * @return mixed
+     * @throws TagNameNotFountException
      */
     protected function getTag($tagName, $item = 0)
     {
         $tag = $this->domDocument->documentElement->getElementsByTagName($tagName);
 
         if (is_null($tag->item(0))) {
-            throw new Exception('Class '.get_class($this).": The tag name {$tagName} does not exist.");
+            throw new TagNameNotFountException(get_class($this,$tagName));
         }
 
         return $tag->item($item);
@@ -111,17 +119,18 @@ trait DIANTrait
      * Get query.
      *
      * @param string $query
-     * @param bool   $validate
-     * @param int    $item
+     * @param bool $validate
+     * @param int $item
      *
      * @return mixed
+     * @throws QueryNotFountException
      */
     protected function getQuery($query, $validate = true, $item = 0)
     {
         $tag = $this->domXPath->query($query);
 
         if (($validate) && (null == $tag->item(0))) {
-            throw new Exception('Class '.get_class($this).": The query {$query} does not exist.");
+            throw new QueryNotFountException(get_class($this));
         }
         if (is_null($item)) {
             return $tag;

@@ -131,7 +131,6 @@ class SOAP extends Sign
 
         parent::__construct($pathCertificate, $passwors, $xmlString);
 
-        return $this;
     }
 
     /**

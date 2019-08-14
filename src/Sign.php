@@ -6,6 +6,10 @@ use Stenfrank\UBL21dian\Traits\DIANTrait;
 
 /**
  * Sign.
+ * @property \DOMDocument domDocument
+ * @property null|string xmlString
+ * @property null|string passwors
+ * @property null|string pathCertificate
  */
 abstract class Sign
 {
@@ -24,6 +28,7 @@ abstract class Sign
      * @param string $pathCertificate
      * @param string $passwors
      * @param string $xmlString
+     * @throws \Exception
      */
     public function __construct($pathCertificate = null, $passwors = null, $xmlString = null)
     {
@@ -37,8 +42,6 @@ abstract class Sign
         if (!is_null($xmlString)) {
             $this->sign();
         }
-
-        return $this;
     }
 
     /**
@@ -56,7 +59,7 @@ abstract class Sign
      *
      * @param string $string
      *
-     * @return XAdESDIAN
+     * @return Sign
      */
     public function sign($string = null)
     {
