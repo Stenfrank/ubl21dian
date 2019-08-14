@@ -13,15 +13,16 @@ use Stenfrank\UBL21dian\Templates\SOAP\SendTestSetAsync;
  */
 class TemplatesTest extends TestCase
 {
-    /** @test */
+    /**
+     * Test de la generacion de la plantilla de envio asincronico
+     * @test
+     */
     public function it_generates_template_send_bill_async()
     {
-        $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
-        $passwors = '3T3rN4661343';
 
-        $sendBillAsync = new SendBillAsync($pathCertificate, $passwors);
+        $sendBillAsync = new SendBillAsync($this->pathCert, $this->passwordCert);
         $sendBillAsync->fileName = 'Test.xml';
-        $sendBillAsync->contentFile = 'base64';
+        $sendBillAsync->contentFile = 'base64_fileZIP';
 
         // Sign
         $sendBillAsync->sign();
@@ -31,20 +32,20 @@ class TemplatesTest extends TestCase
 
         $this->assertSame(true, $domDocumentValidate->loadXML($sendBillAsync->xml));
         $this->assertContains('<wcf:fileName>Test.xml</wcf:fileName>', $sendBillAsync->xml);
-        $this->assertContains('<wcf:contentFile>base64</wcf:contentFile>', $sendBillAsync->xml);
+        $this->assertContains('<wcf:contentFile>base64_fileZIP</wcf:contentFile>', $sendBillAsync->xml);
 
-        // file_put_contents('/home/frank/public_html/Project/ubl-21-dian/SENDBILLASYNC.xml', $sendBillAsync->xml);
+        file_put_contents(__DIR__. '/outputs/templates/SENDBILLASYNC.xml', $sendBillAsync->xml);
     }
 
-    /** @test */
+    /**
+     * tesrt para la generacion de template de envio asincronico
+     * @test
+     */
     public function it_generates_template_send_test_set_async()
     {
-        $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
-        $passwors = '3T3rN4661343';
-
-        $sendTestSetAsync = new SendTestSetAsync($pathCertificate, $passwors);
+        $sendTestSetAsync = new SendTestSetAsync($this->pathCert, $this->passwordCert);
         $sendTestSetAsync->fileName = 'Test.xml';
-        $sendTestSetAsync->contentFile = 'base64';
+        $sendTestSetAsync->contentFile = 'base64_fileZIP';
         $sendTestSetAsync->testSetId = 'xxxxxxxxxxxxxxxxxxx';
 
         // Sign
@@ -55,19 +56,21 @@ class TemplatesTest extends TestCase
 
         $this->assertSame(true, $domDocumentValidate->loadXML($sendTestSetAsync->xml));
         $this->assertContains('<wcf:fileName>Test.xml</wcf:fileName>', $sendTestSetAsync->xml);
-        $this->assertContains('<wcf:contentFile>base64</wcf:contentFile>', $sendTestSetAsync->xml);
+        $this->assertContains('<wcf:contentFile>base64_fileZIP</wcf:contentFile>', $sendTestSetAsync->xml);
         $this->assertContains('<wcf:testSetId>xxxxxxxxxxxxxxxxxxx</wcf:testSetId>', $sendTestSetAsync->xml);
 
-        // file_put_contents('/home/frank/public_html/Project/ubl-21-dian/SENDTESTSETASYNC.xml', $sendTestSetAsync->xml);
+        file_put_contents(__DIR__. '/outputs/SENDTESTSETASYNC.xml', $sendTestSetAsync->xml);
     }
 
-    /** @test */
+    /**
+     * test para el status del zip
+     * @test
+     */
     public function it_generates_template_get_status_zip()
     {
-        $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
-        $passwors = '3T3rN4661343';
 
-        $getStatusZip = new GetStatusZip($pathCertificate, $passwors);
+
+        $getStatusZip = new GetStatusZip($this->pathCert, $this->passwordCert);
         $getStatusZip->trackId = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
 
         // Sign
@@ -79,16 +82,17 @@ class TemplatesTest extends TestCase
         $this->assertSame(true, $domDocumentValidate->loadXML($getStatusZip->xml));
         $this->assertContains('<wcf:trackId>xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx</wcf:trackId>', $getStatusZip->xml);
 
-        // file_put_contents('/home/frank/public_html/Project/ubl-21-dian/GETSTATUSZIP.xml', $getStatusZip->xml);
+        file_put_contents(__DIR__. '/outputs/GETSTATUSZIP.xml', $getStatusZip->xml);
+
     }
 
-    /** @test */
+    /**
+     * @test
+     */
     public function it_generates_template_get_status()
     {
-        $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
-        $passwors = '3T3rN4661343';
 
-        $getStatus = new GetStatus($pathCertificate, $passwors);
+        $getStatus = new GetStatus($this->pathCert, $this->passwordCert);
         $getStatus->trackId = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 
         // Sign
@@ -100,6 +104,6 @@ class TemplatesTest extends TestCase
         $this->assertSame(true, $domDocumentValidate->loadXML($getStatus->xml));
         $this->assertContains('<wcf:trackId>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</wcf:trackId>', $getStatus->xml);
 
-        // file_put_contents('/home/frank/public_html/Project/ubl-21-dian/GETSTATUS.xml', $getStatus->xml);
+        file_put_contents(__DIR__. '/outputs/GETSTATUS.xml', $getStatus->xml);
     }
 }

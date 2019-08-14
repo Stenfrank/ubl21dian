@@ -15,10 +15,11 @@ class ClientTest extends TestCase
     /** @test */
     public function can_consume_web_service_dian()
     {
-        $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
-        $passwors = '3T3rN4661343';
 
-        $getStatusZip = new GetStatusZip($pathCertificate, $passwors);
+        $pathCertificate = __DIR__.'/resources/certs/certicamara.p12';
+        $password = getenv('PASSWORD_CERT');
+
+        $getStatusZip = new GetStatusZip($pathCertificate, $password);
         $getStatusZip->trackId = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
 
         // Sign
