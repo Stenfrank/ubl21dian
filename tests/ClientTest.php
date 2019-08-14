@@ -16,10 +16,7 @@ class ClientTest extends TestCase
     public function can_consume_web_service_dian()
     {
 
-        $pathCertificate = __DIR__.'/resources/certs/certicamara.p12';
-        $password = getenv('PASSWORD_CERT');
-
-        $getStatusZip = new GetStatusZip($pathCertificate, $password);
+        $getStatusZip = new GetStatusZip($this->pathCert, $this->passwordCert);
         $getStatusZip->trackId = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
 
         // Sign
@@ -37,10 +34,7 @@ class ClientTest extends TestCase
     /** @test */
     public function a_soap_template_can_consume_web_service_dian()
     {
-        $pathCertificate = dirname(dirname(__FILE__)).'/certicamara.p12';
-        $passwors = '3T3rN4661343';
-
-        $getStatusZip = new GetStatus($pathCertificate, $passwors);
+        $getStatusZip = new GetStatus($this->pathCert, $this->passwordCert);
         $getStatusZip->trackId = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
 
         // Sign to send

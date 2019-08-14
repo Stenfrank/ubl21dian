@@ -34,7 +34,7 @@ class TemplatesTest extends TestCase
         $this->assertContains('<wcf:fileName>Test.xml</wcf:fileName>', $sendBillAsync->xml);
         $this->assertContains('<wcf:contentFile>base64_fileZIP</wcf:contentFile>', $sendBillAsync->xml);
 
-        file_put_contents(__DIR__. '/outputs/templates/SENDBILLASYNC.xml', $sendBillAsync->xml);
+        file_put_contents(__DIR__. '/outputs/SENDBILLASYNC.xml', $sendBillAsync->xml);
     }
 
     /**
