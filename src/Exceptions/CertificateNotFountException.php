@@ -9,7 +9,7 @@ namespace Stenfrank\UBL21dian\Exceptions;
 class CertificateNotFountException extends ExceptionFather
 {
 
-    public function __construct(string $classNameRunException, $message)
+    public function __construct(string $classNameRunException)
     {
         parent::__construct($classNameRunException, "requires the certificate path and password.");
     }

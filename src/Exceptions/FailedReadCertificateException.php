@@ -1,6 +1,4 @@
 <?php
-
-
 namespace Stenfrank\UBL21dian\Exceptions;
 
 /**
