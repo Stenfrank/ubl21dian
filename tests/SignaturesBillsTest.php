@@ -64,6 +64,8 @@ class SignaturesBillsTest extends TestCase
 
         $this->assertContains('Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"', $signInvoice->xml);
 
+        file_put_contents(__DIR__."/outputs/invoiceSignedv2.xml",$signInvoice->xml);
+
         $this->assertSame(true, $domDocumentValidate->loadXML($signInvoice->xml));
     }
 
@@ -120,5 +122,29 @@ class SignaturesBillsTest extends TestCase
 
         $this->assertContains('d48db2461fc229b54a1b92df388fc66844d23cddd120bf0cc952dda6243c9db9046b23ca3cea0185aac2a985d1fb6c7c', $signInvoice->xml);
         $this->assertSame(true, $domDocumentValidate->loadXML($signInvoice->xml));
+    }
+
+
+    /**
+     * @test
+     */
+    public function invoice_signed_V1()
+    {
+
+        //Establece la zona horaria
+        date_default_timezone_set('America/Bogota');
+
+        $signer =  new SignInvoice($this->pathCert,$this->passwordCert);
+
+        $domcuemtnInvoice = new DOMDocument();
+
+        $domcuemtnInvoice->load(__DIR__ . "/resources/invoices/invoice_unsigned_dian_v1.xml");
+
+        $signer->sign($domcuemtnInvoice->saveXML());
+
+        $this->assertContains('Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"', $signer->xml);
+
+        file_put_contents(__DIR__ . "/outputs/invoiceSignedv1.xml",$signer->xml);
+
     }
 }
