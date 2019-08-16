@@ -2,6 +2,7 @@
 
 namespace Stenfrank\UBL21dian\Templates\SOAP;
 
+use Stenfrank\UBL21dian\HTTP\DOM\Request\SendBillAsyncRequestDOM;
 use Stenfrank\UBL21dian\Templates\Template;
 use Stenfrank\UBL21dian\Templates\CreateTemplate;
 
@@ -45,17 +46,7 @@ class SendBillAsync extends Template implements CreateTemplate
      */
     public function createTemplate()
     {
-        return $this->templateXMLSOAP = <<<XML
-<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:wcf="http://wcf.dian.colombia">
-    <soap:Body>
-        <wcf:SendBillAsync>
-            <!--Optional:-->
-            <wcf:fileName>{$this->fileName}</wcf:fileName>
-            <!--Optional:-->
-            <wcf:contentFile>{$this->contentFile}</wcf:contentFile>
-        </wcf:SendBillAsync>
-    </soap:Body>
-</soap:Envelope>
-XML;
+        $domRequest = new SendBillAsyncRequestDOM($this->fileName,$this->contentFile);
+        return $domRequest->getString();
     }
 }

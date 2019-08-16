@@ -2,6 +2,7 @@
 
 namespace Stenfrank\UBL21dian\Templates\SOAP;
 
+use Stenfrank\UBL21dian\HTTP\DOM\Request\SendTestSetAsyncRequestDOM;
 use Stenfrank\UBL21dian\Templates\Template;
 use Stenfrank\UBL21dian\Templates\CreateTemplate;
 
@@ -46,19 +47,7 @@ class SendTestSetAsync extends Template implements CreateTemplate
      */
     public function createTemplate()
     {
-        return $this->templateXMLSOAP = <<<XML
-<soap:Envelope xmlns:soap="http://www.w3.org/2003/05/soap-envelope" xmlns:wcf="http://wcf.dian.colombia">
-    <soap:Body>
-        <wcf:SendTestSetAsync>
-            <!--Optional:-->
-            <wcf:fileName>{$this->fileName}</wcf:fileName>
-            <!--Optional:-->
-            <wcf:contentFile>{$this->contentFile}</wcf:contentFile>
-            <!--Optional:-->
-            <wcf:testSetId>{$this->testSetId}</wcf:testSetId>
-        </wcf:SendTestSetAsync>
-    </soap:Body>
-</soap:Envelope>
-XML;
+        $domRequest = new SendTestSetAsyncRequestDOM($this->fileName,$this->contentFile,$this->testSetId);
+        return $domRequest->getString();
     }
 }

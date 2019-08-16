@@ -3,6 +3,8 @@
 namespace Stenfrank\Tests;
 
 use DOMDocument;
+use Stenfrank\UBL21dian\HTTP\DOM\Request\SendBillAsyncRequestDOM;
+use Stenfrank\UBL21dian\HTTP\DOM\Request\SendTestSetAsyncRequestDOM;
 use Stenfrank\UBL21dian\Templates\SOAP\GetStatus;
 use Stenfrank\UBL21dian\Templates\SOAP\GetStatusZip;
 use Stenfrank\UBL21dian\Templates\SOAP\SendBillAsync;
@@ -13,6 +15,42 @@ use Stenfrank\UBL21dian\Templates\SOAP\SendTestSetAsync;
  */
 class TemplatesTest extends TestCase
 {
+
+    /**
+     * @test
+     */
+    public function generate_template_dom_request_send_test_bill_async()
+    {
+        $domRequest = new SendTestSetAsyncRequestDOM("Test.xml","base64_fileZIP","xxxxxxxxxxxxxxxxxxx");
+
+        $domDocumentValidate = new DOMDocument();
+        $domDocumentValidate->validateOnParse = true;
+
+        $this->assertSame(true, $domDocumentValidate->loadXML($domRequest->getString()));
+        $this->assertContains('<wcf:fileName>Test.xml</wcf:fileName>', $domRequest->getString());
+        $this->assertContains('<wcf:contentFile>base64_fileZIP</wcf:contentFile>', $domRequest->getString());
+        $this->assertContains('<wcf:contentFile>base64_fileZIP</wcf:contentFile>', $domRequest->getString());
+        $this->assertContains('<wcf:testSetId>xxxxxxxxxxxxxxxxxxx</wcf:testSetId>', $domRequest->getString());
+    }
+
+    /**
+     * @test
+     */
+    public function generate_template_dom_request_send_bill_async()
+    {
+        $domRequest = new SendBillAsyncRequestDOM("Test.xml","base64_fileZIP");
+
+        $domDocumentValidate = new DOMDocument();
+        $domDocumentValidate->validateOnParse = true;
+
+        $this->assertSame(true, $domDocumentValidate->loadXML($domRequest->getString()));
+        $this->assertContains('<wcf:fileName>Test.xml</wcf:fileName>', $domRequest->getString());
+        $this->assertContains('<wcf:contentFile>base64_fileZIP</wcf:contentFile>', $domRequest->getString());
+        $this->assertContains('<wcf:contentFile>base64_fileZIP</wcf:contentFile>', $domRequest->getString());
+    }
+
+
+
     /**
      * Test de la generacion de la plantilla de envio asincronico
      * @test
