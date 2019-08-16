@@ -42,8 +42,8 @@ trait DIANTrait
 
     /**
      * Read certs.
-     * @throws \Stenfrank\UBL21dian\Exceptions\CertificateNotFountException
      * @throws FailedReadCertificateException
+     * @throws CertificateNotFountException
      */
     protected function readCerts()
     {
@@ -65,15 +65,28 @@ trait DIANTrait
     {
         if (!empty($this->certs)) {
             openssl_x509_export($this->certs['cert'], $stringCert);
-
-            return str_replace([PHP_EOL, '-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----'], '', $stringCert);
+            $stringCert = str_replace("-----BEGIN CERTIFICATE-----", "", $stringCert);
+            $stringCert = str_replace("-----END CERTIFICATE-----", "", $stringCert);
+            $stringCert = str_replace("\n", "", str_replace("\r", "", $stringCert));
+            $stringCert = $this->prettify($stringCert);
+            return $stringCert;
         }
 
         throw new Failedx509ExportCertificateException(get_class($this));
     }
 
     /**
+     * Prettify
+     * @param  string $input Input string
+     * @return string        Multi-line resposne
+     */
+    protected function prettify($input) {
+        return chunk_split($input, 76, "\n");
+    }
+
+    /**
      * Identifiers references.
+     *
      */
     protected function identifiersReferences()
     {
@@ -178,7 +191,6 @@ trait DIANTrait
         if (array_key_exists($name, $this->attributes)) {
             return $this->attributes[$name];
         }
-
         return;
     }
 }

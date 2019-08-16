@@ -169,7 +169,7 @@ class SignInvoice extends Sign
         $this->softwareSecurityCode();
 
         // UUID
-        $this->setUUID();
+       $this->setUUID();
 
         // Digest value xml clean
         $this->digestValueXML();
@@ -207,6 +207,8 @@ class SignInvoice extends Sign
 
         $this->qualifyingProperties = $this->domDocument->createElement('xades:QualifyingProperties');
         $this->qualifyingProperties->setAttribute('Target', "#{$this->SignatureID}");
+        $this->qualifyingProperties->setAttribute("xmlns:xades","http://uri.etsi.org/01903/v1.3.2#");
+        $this->qualifyingProperties->setAttribute("xmlns:xades141","http://uri.etsi.org/01903/v1.4.1#");
         $this->object->appendChild($this->qualifyingProperties);
 
         $this->signedProperties = $this->domDocument->createElement('xades:SignedProperties');
@@ -332,7 +334,33 @@ class SignInvoice extends Sign
         $this->referenceXML->appendChild($this->digestValueXML);
 
         $this->domDocumentReferenceKeyInfoC14N = new DOMDocument($this->version, $this->encoding);
-        $this->domDocumentReferenceKeyInfoC14N->loadXML(str_replace('<ds:KeyInfo ', "<ds:KeyInfo {$this->joinArray($this->ns)} ", $this->domDocument->saveXML($this->keyInfo)));
+
+
+
+
+
+        $reampleceKeyInfor = str_replace('<ds:KeyInfo ', "<ds:KeyInfo {$this->joinArray($this->ns)} ", $this->domDocument->saveXML($this->keyInfo));
+        $this->domDocumentReferenceKeyInfoC14N->loadXML($reampleceKeyInfor);
+
+        /*
+        $privateKey = openssl_pkey_get_private($this->certs['pkey']);
+        $privateData = openssl_pkey_get_details($privateKey);
+        $modulus = chunk_split(base64_encode($privateData['rsa']['n']), 76);
+        $modulus = str_replace("\r", "", $modulus);
+        $exponent = base64_encode($privateData['rsa']['e']);
+
+        $keyValueElement = $this->domDocumentReferenceKeyInfoC14N->createElement("ds:KeyValue",null);
+        $rsaKeyValueElement = $this->domDocumentReferenceKeyInfoC14N->createElement("ds:RSAKeyValue",null);
+        $modulusElement = $this->domDocumentReferenceKeyInfoC14N->createElement("ds:Modulus",$modulus);
+        $exponentElement = $this->domDocumentReferenceKeyInfoC14N->createElement("ds:Exponent",$exponent);
+        $rsaKeyValueElement->appendChild($modulusElement);
+        $rsaKeyValueElement->appendChild($exponentElement);
+        $keyValueElement->appendChild($rsaKeyValueElement);
+        $keyInfoElement = $this->domDocumentReferenceKeyInfoC14N->getElementsByTagName("KeyInfo")->item(0);
+        $keyInfoElement->appendChild($keyValueElement);
+
+        */
+        file_put_contents(__DIR__."/../../tests/outputs/keyinf.xml",$this->domDocumentReferenceKeyInfoC14N->C14N());
 
         $this->DigestValueKeyInfo = base64_encode(hash($this->algorithm['hash'], $this->domDocumentReferenceKeyInfoC14N->C14N(), true));
 
@@ -370,7 +398,7 @@ class SignInvoice extends Sign
 
         openssl_sign($this->domDocumentSignatureValueC14N->C14N(), $this->resultSignature, $this->certs['pkey'], $this->algorithm['sign']);
 
-        $this->signatureValue->nodeValue = base64_encode($this->resultSignature);
+        $this->signatureValue->nodeValue = $this->prettify(base64_encode($this->resultSignature));
     }
 
     /**
