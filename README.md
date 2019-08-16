@@ -16,6 +16,7 @@ Core for electronic invoicing pre-validation - DIAN UBL 2.1.
 ## Authors
 
 * **Frank Aguirre** - *Maintainer* - [Stenfrank](https://github.com/Stenfrank/)
+* **Juan Diaz** - *Accomplice* - [FuriosoJack](https://github.com/FuriosoJack/)
 
 ## Donation
 If this library help you reduce time to develop, you can give me a cup of coffee :smiley:.

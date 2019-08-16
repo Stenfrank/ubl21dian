@@ -359,8 +359,9 @@ class SignInvoice extends Sign
         $keyInfoElement = $this->domDocumentReferenceKeyInfoC14N->getElementsByTagName("KeyInfo")->item(0);
         $keyInfoElement->appendChild($keyValueElement);
 
+         file_put_contents(__DIR__."/../../tests/outputs/keyinf.xml",$this->domDocumentReferenceKeyInfoC14N->C14N());
         */
-        file_put_contents(__DIR__."/../../tests/outputs/keyinf.xml",$this->domDocumentReferenceKeyInfoC14N->C14N());
+
 
         $this->DigestValueKeyInfo = base64_encode(hash($this->algorithm['hash'], $this->domDocumentReferenceKeyInfoC14N->C14N(), true));
 

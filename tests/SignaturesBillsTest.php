@@ -108,7 +108,6 @@ class SignaturesBillsTest extends TestCase
     public function it_generates_signature_XAdES_and_calculate_cufe()
     {
 
-
         $signInvoice = new SignInvoice($this->pathCert, $this->passwordCert);
 
         // CUFE
@@ -124,27 +123,4 @@ class SignaturesBillsTest extends TestCase
         $this->assertSame(true, $domDocumentValidate->loadXML($signInvoice->xml));
     }
 
-
-    /**
-     * @test
-     */
-    public function invoice_signed_V1()
-    {
-
-        //Establece la zona horaria
-        date_default_timezone_set('America/Bogota');
-
-        $signer =  new SignInvoice($this->pathCert,$this->passwordCert);
-
-        $domcuemtnInvoice = new DOMDocument();
-
-        $domcuemtnInvoice->load(__DIR__ . "/resources/invoices/invoice_unsigned_dian_v1.xml");
-
-        $signer->sign($domcuemtnInvoice->saveXML());
-
-        $this->assertContains('Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"', $signer->xml);
-
-        file_put_contents(__DIR__ . "/outputs/invoiceSignedv1.xml",$signer->xml);
-
-    }
 }
