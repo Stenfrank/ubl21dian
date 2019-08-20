@@ -45,7 +45,6 @@ class ResponseClientTest extends TestCase
         $this->assertTrue($responseObjectDom->getStatusHTTPCode() == 200);
         $this->assertEquals("ef9998bd-8081-4882-9762-3d7cc53ac497",$responseObjectDom->getZipKey());
 
-
     }
 
 

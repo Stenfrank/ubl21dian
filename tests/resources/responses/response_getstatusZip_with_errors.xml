@@ -1,0 +1,89 @@
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing"
+            xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+    <s:Header>
+        <a:Action s:mustUnderstand="1">http://wcf.dian.colombia/IWcfDianCustomerServices/GetStatusZipResponse</a:Action>
+        <o:Security s:mustUnderstand="1"
+                    xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <u:Timestamp u:Id="_0">
+                <u:Created>2019-08-20T17:29:07.764Z</u:Created>
+                <u:Expires>2019-08-20T17:34:07.764Z</u:Expires>
+            </u:Timestamp>
+        </o:Security>
+    </s:Header>
+    <s:Body>
+        <GetStatusZipResponse xmlns="http://wcf.dian.colombia">
+            <GetStatusZipResult xmlns:b="http://schemas.datacontract.org/2004/07/DianResponse"
+                                xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+                <b:DianResponse>
+                    <b:ErrorMessage xmlns:c="http://schemas.microsoft.com/2003/10/Serialization/Arrays">
+                        <c:string>Regla: FAJ26, Rechazo: Responsabilidad informada por emisor no valida según lista.
+                        </c:string>
+                        <c:string>Regla: FAB27b, Rechazo: Huella no corresponde a un software autorizado para este
+                            OFE.
+                        </c:string>
+                        <c:string>Regla: FAD06, Rechazo: Valor del CUFE no está calculado correctamente.</c:string>
+                        <c:string>Regla: FAJ40, Rechazo: EL contenido de este elemento no corresponde a un contenido
+                            valido
+                        </c:string>
+                        <c:string>Regla: FAU04, Rechazo: Base Imponible es distinto a la suma de los valores de las
+                            bases imponibles de todas líneas de detalle.
+                        </c:string>
+                        <c:string>Regla: FAK26, Rechazo: Responsabilidad informada para receptor no valida según
+                            lista.
+                        </c:string>
+                        <c:string>Regla: FAJ27, Rechazo: Régimen informado por emisor no valido según lista</c:string>
+                        <c:string>Regla: FAJ41, Rechazo: EL contenido de este elemento no corresponde al nombre y código
+                            valido.
+                        </c:string>
+                        <c:string>Regla: FAJ29, Rechazo: Este código no corresponde a un valor válido de la lista
+                        </c:string>
+                        <c:string>Regla: FAJ09, Rechazo: Este código no corresponde a un valor válido de la lista
+                        </c:string>
+                        <c:string>Regla: FAU06, Rechazo: Valor Bruto más tributos es diferente a Valor Bruto de la
+                            factura que contienen el valor comercial más la Suma de los Tributos de todas las líneas de
+                            detalle.
+                        </c:string>
+                        <c:string>Regla: FAS02, Rechazo: (R) Valor total de un tributo no corresponde a la suma de todas
+                            las informaciones correspondientes a cada una de las tarifas informadas en este documento
+                            para este tributo
+                        </c:string>
+                        <c:string>Regla: FAJ28, Rechazo: No fue informado el conjunto formado por los elementos : ID,
+                            CityName, CountrySubentity, CountrySubentityCode, PostalZone, AddressLine, Line, Country,
+                            IdentificationCode
+                        </c:string>
+                        <c:string>Regla: FAJ32, Rechazo: Este código no corresponde a un valor válido de la lista
+                        </c:string>
+                        <c:string>Regla: FAJ12, Rechazo: El codigo no corresponde a un valor valido de la lista
+                        </c:string>
+                        <c:string>Regla: FAK08, Rechazo: El grupo deberá estar conformado al menos por el conjunto
+                            formado por los elementos ID, CityName, CountrySubentity, CountrySubentityCode, AddressLine,
+                            Line, Country, IdentificationCode
+                        </c:string>
+                        <c:string>Regla: FAJ08, Rechazo: No fue informado el conjunto formado por los elementos : ID,
+                            CityName, CountrySubentity, CountrySubentityCode, PostalZone , AddressLine, Line, Country,
+                            IdentificationCode
+                        </c:string>
+                        <c:string>Regla: FAB34, Rechazo: El DV del NIT no esta informado o no es correcto</c:string>
+                        <c:string>Regla: FAB31, Rechazo: AuthorizationProviderID no corresponde al NIT de la DIAN
+                            (800197268)
+                        </c:string>
+                        <c:string>Regla: FAU14, Rechazo: Valor a Pagar de Factura es distinto de la Suma de Valor Bruto
+                            más tributos - Valor del Descuento Total + Valor del Cargo Total - Valor del Anticipo Total
+                        </c:string>
+                        <c:string>Regla: FAN02, Rechazo: Método de pago inválido</c:string>
+                    </b:ErrorMessage>
+                    <b:IsValid>false</b:IsValid>
+                    <b:StatusCode>99</b:StatusCode>
+                    <b:StatusDescription>Validación contiene errores en campos mandatorios.</b:StatusDescription>
+                    <b:StatusMessage i:nil="true"/>
+                    <b:XmlBase64Bytes>+CiAgICAgIDwvY2FjOlJlc3BvbnNlPgogICAgPC9jYWM6TGluZVJlc3BvbnNlPgogIDwvY2FjOkRvY3VtZW50UmVzcG9uc2U+CjwvQXBwbGljYXRpb25SZXNwb25zZT4=
+                    </b:XmlBase64Bytes>
+                    <b:XmlBytes i:nil="true"/>
+                    <b:XmlDocumentKey>840ca7a4606904acb5d979db78257876f7c987261cb499e9b4a4c4fd18864db9a7c54c1b15affb68997550889cffd4f7
+                    </b:XmlDocumentKey>
+                    <b:XmlFileName>face_f08300448580000000003</b:XmlFileName>
+                </b:DianResponse>
+            </GetStatusZipResult>
+        </GetStatusZipResponse>
+    </s:Body>
+</s:Envelope>

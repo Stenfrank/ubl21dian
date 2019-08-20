@@ -46,21 +46,22 @@ abstract class BasicResponseDOM
     /**
      * Se encarga de registrar los namespaces del response
      */
-    private function registerNS()
+    protected function registerNS($namespacese = array())
     {
+
         $namespaces = [
-          "s" => "http://www.w3.org/2003/05/soap-envelope",
-          "a" => "http://www.w3.org/2005/08/addressing",
-          "u" => "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd",
-          "o" => "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
-          "b" => "http://schemas.datacontract.org/2004/07/UploadDocumentResponse",
-          "c" => "http://schemas.datacontract.org/2004/07/XmlParamsResponseTrackId",
-          "i" => "http://www.w3.org/2001/XMLSchema-instance"
+            "s" => "http://www.w3.org/2003/05/soap-envelope",
+            "a" => "http://www.w3.org/2005/08/addressing",
+            "u" => "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd",
+            "o" => "http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd",
         ];
+
+        $namespaces = array_merge($namespaces,$namespacese);
 
         foreach ($namespaces as $key => $value){
             $this->domXPath->registerNamespace($key,$value);
         }
+
 
     }
 
