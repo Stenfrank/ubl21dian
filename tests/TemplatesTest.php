@@ -3,6 +3,8 @@
 namespace Stenfrank\Tests;
 
 use DOMDocument;
+use Stenfrank\UBL21dian\HTTP\DOM\Request\GetStatusRequestDOM;
+use Stenfrank\UBL21dian\HTTP\DOM\Request\GetStatusZipRequestDOM;
 use Stenfrank\UBL21dian\HTTP\DOM\Request\SendBillAsyncRequestDOM;
 use Stenfrank\UBL21dian\HTTP\DOM\Request\SendTestSetAsyncRequestDOM;
 use Stenfrank\UBL21dian\Templates\SOAP\GetStatus;
@@ -37,23 +39,6 @@ class TemplatesTest extends TestCase
         $this->assertContains('<wcf:testSetId>xxxxxxxxxxxxxxxxxxx</wcf:testSetId>', $domRequest->getTemplate());
     }
 
-    /**
-     *
-     */
-    public function generate_template_dom_request_send_bill_async()
-    {
-        $domRequest = new SendBillAsyncRequestDOM("Test.xml","base64_fileZIP");
-
-        $domDocumentValidate = new DOMDocument();
-        $domDocumentValidate->validateOnParse = true;
-
-        $this->assertSame(true, $domDocumentValidate->loadXML($domRequest->getTemplate()));
-        $this->assertContains('<wcf:fileName>Test.xml</wcf:fileName>', $domRequest->getTemplate());
-        $this->assertContains('<wcf:contentFile>base64_fileZIP</wcf:contentFile>', $domRequest->getTemplate());
-        $this->assertContains('<wcf:contentFile>base64_fileZIP</wcf:contentFile>', $domRequest->getTemplate());
-    }
-
-
 
     /**
      * Test de la generacion de la plantilla de envio asincronico
@@ -62,7 +47,7 @@ class TemplatesTest extends TestCase
     public function it_generates_template_send_bill_async()
     {
 
-        $sendBillAsync = new SendBillAsync($this->pathCert, $this->passwordCert);
+        $sendBillAsync = new SendBillAsyncRequestDOM($this->pathCert, $this->passwordCert);
         $sendBillAsync->fileName = 'Test.xml';
         $sendBillAsync->contentFile = 'base64_fileZIP';
 
@@ -85,7 +70,7 @@ class TemplatesTest extends TestCase
      */
     public function it_generates_template_send_test_set_async()
     {
-        $sendTestSetAsync = new SendTestSetAsync($this->pathCert, $this->passwordCert);
+        $sendTestSetAsync = new SendTestSetAsyncRequestDOM($this->pathCert, $this->passwordCert);
         $sendTestSetAsync->fileName = 'Test.xml';
         $sendTestSetAsync->contentFile = 'base64_fileZIP';
         $sendTestSetAsync->testSetId = 'xxxxxxxxxxxxxxxxxxx';
@@ -112,7 +97,7 @@ class TemplatesTest extends TestCase
     {
 
 
-        $getStatusZip = new GetStatusZip($this->pathCert, $this->passwordCert);
+        $getStatusZip = new GetStatusZipRequestDOM($this->pathCert, $this->passwordCert);
         $getStatusZip->trackId = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
 
         // Sign
@@ -134,7 +119,7 @@ class TemplatesTest extends TestCase
     public function it_generates_template_get_status()
     {
 
-        $getStatus = new GetStatus($this->pathCert, $this->passwordCert);
+        $getStatus = new GetStatusRequestDOM($this->pathCert, $this->passwordCert);
         $getStatus->trackId = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx';
 
         // Sign

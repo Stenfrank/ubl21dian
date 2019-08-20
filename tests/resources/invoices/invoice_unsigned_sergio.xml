@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Invoice xmlns:ds="http://www.w3.org/2000/09/xmldsig#" xmlns="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:ext="urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2" xmlns:sts="http://www.dian.gov.co/contratos/facturaelectronica/v1/Structures" xmlns:xades="http://uri.etsi.org/01903/v1.3.2#" xmlns:xades141="http://uri.etsi.org/01903/v1.4.1#" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 http://docs.oasis-open.org/ubl/os-UBL-2.1/xsd/maindoc/UBL-Invoice-2.1.xsd">
+  <ext:UBLExtensions>
+    <ext:UBLExtension>
+      <ext:ExtensionContent>
+        <sts:DianExtensions>
+          <sts:InvoiceControl>
+            <sts:InvoiceAuthorization>9000000032847747</sts:InvoiceAuthorization>
+            <sts:AuthorizationPeriod>
+              <cbc:StartDate>2018-02-20</cbc:StartDate>
+              <cbc:EndDate>2028-02-20</cbc:EndDate>
+            </sts:AuthorizationPeriod>
+            <sts:AuthorizedInvoices>
+              <sts:Prefix>PRUE</sts:Prefix>
+              <sts:From>980000000</sts:From>
+              <sts:To>985000000</sts:To>
+            </sts:AuthorizedInvoices>
+          </sts:InvoiceControl>
+          <sts:InvoiceSource>
+            <cbc:IdentificationCode listAgencyID="6" listAgencyName="United Nations Economic Commission for Europe" listSchemeURI="urn:oasis:names:specification:ubl:codelist:gc:CountryIdentificationCode-2.1">CO</cbc:IdentificationCode>
+          </sts:InvoiceSource>
+          <sts:SoftwareProvider>
+            <sts:ProviderID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)" schemeID="9" schemeName="31">830044858</sts:ProviderID>
+            <sts:SoftwareID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)">d9138d29-4909-4e9c-b4bc-9b2ef46dbe75</sts:SoftwareID>
+          </sts:SoftwareProvider>
+          <sts:SoftwareSecurityCode schemeAgencyID="195" schemeAgencyName="CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)">5858d920c3b4c5a3aae7b5d6570c8b7a2187e7c14dec0115958be257a7d5379ef6864acfdcf010ff03acaa7cfe5ffb57</sts:SoftwareSecurityCode>
+          <sts:AuthorizationProvider>
+            <sts:AuthorizationProviderID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Direccion de Impuestos y Aduanas Nacionales)" schemeID="4" schemeName="31">800197268</sts:AuthorizationProviderID>
+          </sts:AuthorizationProvider>
+          <sts:QRCode>https://muisca.dian.gov.co/WebFacturaelectronica/paginas/VerificarFacturaElectronicaExterno.faces?TipoDocumento=1NroDocumento=PRUE980087365NITFacturador=31NumIdentAdquiriente=830043188Cufe=604128a1bbf0a49098411bbcd6c7b059e4d35cd0</sts:QRCode>
+        </sts:DianExtensions>
+      </ext:ExtensionContent>
+    </ext:UBLExtension>
+    <ext:UBLExtension>
+      <ext:ExtensionContent/>
+    </ext:UBLExtension>
+  </ext:UBLExtensions>
+  <cbc:UBLVersionID>UBL 2.1</cbc:UBLVersionID>
+  <cbc:CustomizationID>05</cbc:CustomizationID>
+  <cbc:ProfileID>DIAN 2.1</cbc:ProfileID>
+  <cbc:ProfileExecutionID>2</cbc:ProfileExecutionID>
+  <cbc:ID>PRUE980087365</cbc:ID>
+  <cbc:UUID schemeID="2" schemeName="CUFE-SHA384">604128a1bbf0a49098411bbcd6c7b059e4d35cd0</cbc:UUID>
+  <cbc:IssueDate>2019-07-25</cbc:IssueDate>
+  <cbc:IssueTime>10:38:36</cbc:IssueTime>
+  <cbc:InvoiceTypeCode>01</cbc:InvoiceTypeCode>
+  <cbc:Note/>
+  <cbc:DocumentCurrencyCode>COP</cbc:DocumentCurrencyCode>
+  <cbc:LineCountNumeric>2</cbc:LineCountNumeric>
+  <cac:AccountingSupplierParty>
+    <cbc:AdditionalAccountID schemeAgencyID="195">1</cbc:AdditionalAccountID>
+    <cac:Party>
+      <cac:PartyName>
+        <cbc:Name>PC COM S.A.</cbc:Name>
+      </cac:PartyName>
+      <cac:PhysicalLocation>
+        <cac:Address>
+          <cbc:ID/>
+          <cbc:CityName>Bogotá D.C.</cbc:CityName>
+          <cac:AddressLine>
+            <cbc:Line>Carrera 49 B No. 104 a - 89</cbc:Line>
+          </cac:AddressLine>
+          <cac:Country>
+            <cbc:IdentificationCode>CO</cbc:IdentificationCode>
+            <cbc:Name>Colombia</cbc:Name>
+          </cac:Country>
+        </cac:Address>
+      </cac:PhysicalLocation>
+      <cac:PartyTaxScheme>
+        <cbc:RegistrationName>PC COM S.A.</cbc:RegistrationName>
+        <cbc:CompanyID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeID="9" schemeName="31">830044858</cbc:CompanyID>
+        <cbc:TaxLevelCode listName="5">2</cbc:TaxLevelCode>
+        <cac:RegistrationAddress>
+          <cbc:ID/>
+          <cbc:CityName>Bogotá D.C.</cbc:CityName>
+          <cac:AddressLine>
+            <cbc:Line>Carrera 49 B No. 104 a - 89</cbc:Line>
+          </cac:AddressLine>
+          <cac:Country>
+            <cbc:IdentificationCode>CO</cbc:IdentificationCode>
+            <cbc:Name>Colombia</cbc:Name>
+          </cac:Country>
+        </cac:RegistrationAddress>
+        <cac:TaxScheme>
+          <cbc:ID>1</cbc:ID>
+          <cbc:Name>IVA</cbc:Name>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>PC COM S.A.</cbc:RegistrationName>
+        <cbc:CompanyID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeID="9" schemeName="31">830044858</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Telephone>7427080</cbc:Telephone>
+        <cbc:ElectronicMail>sistemas@pc.com.co</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingSupplierParty>
+  <cac:AccountingCustomerParty>
+    <cbc:AdditionalAccountID schemeAgencyID="195">1</cbc:AdditionalAccountID>
+    <cac:Party>
+      <cac:PartyName>
+        <cbc:Name>NOMBRE DEL ADQUIRIENTE</cbc:Name>
+      </cac:PartyName>
+      <cac:PhysicalLocation>
+        <cac:Address>
+          <cbc:ID/>
+          <cbc:CityName>--</cbc:CityName>
+          <cbc:CountrySubentity>--</cbc:CountrySubentity>
+          <cac:AddressLine>
+            <cbc:Line>DIRECCION DEL ADQUIRIENTE</cbc:Line>
+          </cac:AddressLine>
+          <cac:Country>
+            <cbc:IdentificationCode>CO</cbc:IdentificationCode>
+            <cbc:Name>Colombia</cbc:Name>
+          </cac:Country>
+        </cac:Address>
+      </cac:PhysicalLocation>
+      <cac:PartyTaxScheme>
+        <cbc:RegistrationName>NOMBRE DEL ADQUIRIENTE</cbc:RegistrationName>
+        <cbc:CompanyID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeID="9" schemeName="31">830043188</cbc:CompanyID>
+        <cbc:TaxLevelCode listName="5">2</cbc:TaxLevelCode>
+        <cac:TaxScheme>
+          <cbc:ID>1</cbc:ID>
+          <cbc:Name>IVA</cbc:Name>
+        </cac:TaxScheme>
+      </cac:PartyTaxScheme>
+      <cac:PartyLegalEntity>
+        <cbc:RegistrationName>NOMBRE DEL ADQUIRIENTE</cbc:RegistrationName>
+        <cbc:CompanyID schemeAgencyID="195" schemeAgencyName="CO, DIAN (Dirección de Impuestos y Aduanas Nacionales)" schemeID="9" schemeName="31">830043188</cbc:CompanyID>
+      </cac:PartyLegalEntity>
+      <cac:Contact>
+        <cbc:Name>PRIMER NOMBRE RECEPTOR SEGUNDO NOMBRE RECEPTOR APELLIDOS DEL RECEPTOR</cbc:Name>
+        <cbc:Telephone>TELEFONO NOMBRE RECEPTOR</cbc:Telephone>
+        <cbc:ElectronicMail>sergios.wiesner@cirrus.net.co</cbc:ElectronicMail>
+      </cac:Contact>
+    </cac:Party>
+  </cac:AccountingCustomerParty>
+  <cac:TaxTotal>
+    <cbc:TaxAmount currencyID="COP">90250.00</cbc:TaxAmount>
+    <cac:TaxSubtotal>
+      <cbc:TaxableAmount currencyID="COP">475000.00</cbc:TaxableAmount>
+      <cbc:TaxAmount currencyID="COP">90250.00</cbc:TaxAmount>
+      <cac:TaxCategory>
+        <cbc:Percent>19.00</cbc:Percent>
+        <cac:TaxScheme>
+          <cbc:ID>01</cbc:ID>
+        </cac:TaxScheme>
+      </cac:TaxCategory>
+    </cac:TaxSubtotal>
+  </cac:TaxTotal>
+  <cac:LegalMonetaryTotal>
+    <cbc:LineExtensionAmount currencyID="COP">475000.00</cbc:LineExtensionAmount>
+    <cbc:TaxExclusiveAmount currencyID="COP">475000.00</cbc:TaxExclusiveAmount>
+    <cbc:PayableAmount currencyID="COP">565250</cbc:PayableAmount>
+  </cac:LegalMonetaryTotal>
+  <cac:InvoiceLine>
+    <cbc:ID>0</cbc:ID>
+    <cbc:InvoicedQuantity unitCode="EA">1.00</cbc:InvoicedQuantity>
+    <cbc:LineExtensionAmount currencyID="COP">75000.00</cbc:LineExtensionAmount>
+    <cac:Item>
+      <cbc:Description>CPU de Escritorio</cbc:Description>
+    </cac:Item>
+    <cac:Price>
+      <cbc:PriceAmount currencyID="COP">75000</cbc:PriceAmount>
+    </cac:Price>
+  </cac:InvoiceLine>
+</Invoice>

@@ -11,25 +11,21 @@ class SendBillAsyncRequestDOM extends BasicRequestDOM
 {
 
     /**
-     * @var
+     * Action.
+     *
+     * @var string
      */
-    private $fileName;
+    public $Action = 'http://wcf.dian.colombia/IWcfDianCustomerServices/SendBillAsync';
 
     /**
-     * @var
+     * Required properties.
+     *
+     * @var array
      */
-    private $contentFile;
-
-
-    public function __construct(string $fileName, string $contentFile)
-    {
-        $this->fileName = $fileName;
-        $this->contentFile = $contentFile;
-        parent::__construct();
-
-    }
-
-
+    protected $requiredProperties = [
+        'fileName',
+        'contentFile',
+    ];
 
 
     /**
@@ -37,9 +33,9 @@ class SendBillAsyncRequestDOM extends BasicRequestDOM
      */
     protected function build()
     {
-        $elementFile = $this->domDocument->getElementsByTagName("fileName")->item(0);
+        $elementFile = $this->domTemplate->getElementsByTagName("fileName")->item(0);
         $elementFile->nodeValue = $this->fileName;
-        $this->domDocument->getElementsByTagName("contentFile")->item(0)->nodeValue = $this->contentFile;
+        $this->domTemplate->getElementsByTagName("contentFile")->item(0)->nodeValue = $this->contentFile;
     }
 
     /**

@@ -3,6 +3,7 @@ namespace Stenfrank\Tests;
 
 use DOMDocument;
 use Stenfrank\UBL21dian\Client;
+use Stenfrank\UBL21dian\HTTP\DOM\Request\GetStatusRequestDOM;
 use Stenfrank\UBL21dian\HTTP\DOM\Request\SendTestSetAsyncRequestDOM;
 use Stenfrank\UBL21dian\Templates\SOAP\GetStatus;
 use Stenfrank\UBL21dian\Templates\SOAP\GetStatusZip;
@@ -12,17 +13,19 @@ use Stenfrank\UBL21dian\Templates\SOAP\GetStatusZip;
  */
 class ClientTest extends TestCase
 {
-    /** @test */
+    /** @test
+     * @throws \Stenfrank\UBL21dian\Exceptions\CurlException
+     */
     public function can_consume_web_service_dian()
     {
 
-        $getStatusZip = new GetStatusZip($this->pathCert, $this->passwordCert);
+        $getStatusZip = new GetStatusRequestDOM($this->pathCert, $this->passwordCert);
         $getStatusZip->trackId = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
 
         // Sign
         $getStatusZip->sign();
 
-        $client = new Client($getStatusZip);
+        $client = new Client($getStatusZip->To,$getStatusZip->xml);
 
         $domDocumentValidate = new DOMDocument();
         $domDocumentValidate->validateOnParse = true;
@@ -34,17 +37,18 @@ class ClientTest extends TestCase
     /** @test */
     public function a_soap_template_can_consume_web_service_dian()
     {
-        $getStatusZip = new GetStatus($this->pathCert, $this->passwordCert);
+        $getStatusZip = new GetStatusRequestDOM($this->pathCert, $this->passwordCert);
         $getStatusZip->trackId = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
 
         // Sign to send
-        $client = $getStatusZip->signToSend();
+        $responseDOM = $getStatusZip->signToSend();
 
         $domDocumentValidate = new DOMDocument();
         $domDocumentValidate->validateOnParse = true;
 
-        $this->assertSame(true, $domDocumentValidate->loadXML($client->getResponse()));
-        $this->assertContains('TrackId no existe en los registros de la DIAN.', $client->getResponse());
+        $responseString = $responseDOM->getDomDocument()->saveXML();
+        $this->assertSame(true, $domDocumentValidate->loadXML($responseString));
+        $this->assertContains('TrackId no existe en los registros de la DIAN.', $responseString);
     }
 
     /**
@@ -57,7 +61,6 @@ class ClientTest extends TestCase
         $domRequest->contentFile = base64_encode(file_get_contents(__DIR__."/resources/zips/invoice_signed_dian_v2.zip"));
         $domRequest->testSetId = "xxxxxxxxxxxxxxxxxxx";
         $responseDom = $domRequest->signToSend();
-
 
         $stringResponse = $responseDom->getDomDocument()->saveXML();
 
