@@ -136,9 +136,8 @@ abstract class BasicRequestDOM extends SOAP
         parent::sign($this->getTemplate());
 
         $this->client = new Client($this->To,$this->xml);
-
         $classResponse = $this->getClassResponse();
-        return new $classResponse($this->client->getResponseToDOM());
+        return new $classResponse($this->client->getResponseToDOM(),$this->client->getStatusCode());
 
     }
 

@@ -168,4 +168,15 @@ class Client
     {
         return json_encode($this->getResponseToObject());
     }
+
+
+    /**
+     * Devuelve el codigo de estado de la peticion
+     * @return mixed
+     */
+    public function getStatusCode()
+    {
+        return curl_getinfo($this->curl,CURLINFO_HTTP_CODE);
+    }
+
 }

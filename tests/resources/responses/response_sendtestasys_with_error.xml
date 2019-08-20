@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<s:Envelope xmlns:s="http://www.w3.org/2003/05/soap-envelope" xmlns:a="http://www.w3.org/2005/08/addressing" xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+  <s:Header>
+    <a:Action s:mustUnderstand="1">http://wcf.dian.colombia/IWcfDianCustomerServices/SendTestSetAsyncResponse</a:Action>
+    <o:Security xmlns:o="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" s:mustUnderstand="1">
+      <u:Timestamp u:Id="_0">
+        <u:Created>2019-08-16T21:19:50.120Z</u:Created>
+        <u:Expires>2019-08-16T21:24:50.120Z</u:Expires>
+      </u:Timestamp>
+    </o:Security>
+  </s:Header>
+  <s:Body>
+    <SendTestSetAsyncResponse xmlns="http://wcf.dian.colombia">
+      <SendTestSetAsyncResult xmlns:b="http://schemas.datacontract.org/2004/07/UploadDocumentResponse" xmlns:i="http://www.w3.org/2001/XMLSchema-instance">
+        <b:ErrorMessageList xmlns:c="http://schemas.datacontract.org/2004/07/XmlParamsResponseTrackId">
+          <c:XmlParamsResponseTrackId>
+            <c:DocumentKey>604128a1bbf0a49098411bbcd6c7b059e4d35cd1</c:DocumentKey>
+            <c:ProcessedMessage>Error al parsear xml. Namespace prefix 'ds' is not defined.</c:ProcessedMessage>
+            <c:SenderCode i:nil="true"/>
+            <c:Success>false</c:Success>
+            <c:XmlFileName>invoiceSigned_sergiov2</c:XmlFileName>
+          </c:XmlParamsResponseTrackId>
+        </b:ErrorMessageList>
+        <b:ZipKey i:nil="true"/>
+      </SendTestSetAsyncResult>
+    </SendTestSetAsyncResponse>
+  </s:Body>
+</s:Envelope>

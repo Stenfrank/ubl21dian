@@ -119,7 +119,7 @@ trait DIANTrait
         $tag = $this->domDocument->documentElement->getElementsByTagName($tagName);
 
         if (is_null($tag->item(0))) {
-            throw new TagNameNotFountException(get_class($this,$tagName));
+            throw new TagNameNotFountException(get_class($this),$tagName);
         }
 
         return $tag->item($item);
@@ -140,7 +140,7 @@ trait DIANTrait
         $tag = $this->domXPath->query($query);
 
         if (($validate) && (null == $tag->item(0))) {
-            throw new QueryNotFountException(get_class($this));
+            throw new QueryNotFountException(get_class($this),$query);
         }
         if (is_null($item)) {
             return $tag;
