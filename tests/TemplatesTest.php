@@ -21,20 +21,24 @@ class TemplatesTest extends TestCase
      */
     public function generate_template_dom_request_send_test_bill_async()
     {
-        $domRequest = new SendTestSetAsyncRequestDOM("Test.xml","base64_fileZIP","xxxxxxxxxxxxxxxxxxx");
+        $domRequest = new SendTestSetAsyncRequestDOM($this->pathCert,$this->passwordCert);
+        $domRequest->fileName = "Test.xml";
+        $domRequest->contentFile = "base64_fileZIP";
+        $domRequest->testSetId = "xxxxxxxxxxxxxxxxxxx";
+
 
         $domDocumentValidate = new DOMDocument();
         $domDocumentValidate->validateOnParse = true;
 
-        $this->assertSame(true, $domDocumentValidate->loadXML($domRequest->getString()));
-        $this->assertContains('<wcf:fileName>Test.xml</wcf:fileName>', $domRequest->getString());
-        $this->assertContains('<wcf:contentFile>base64_fileZIP</wcf:contentFile>', $domRequest->getString());
-        $this->assertContains('<wcf:contentFile>base64_fileZIP</wcf:contentFile>', $domRequest->getString());
-        $this->assertContains('<wcf:testSetId>xxxxxxxxxxxxxxxxxxx</wcf:testSetId>', $domRequest->getString());
+        $this->assertSame(true, $domDocumentValidate->loadXML($domRequest->getTemplate()));
+        $this->assertContains('<wcf:fileName>Test.xml</wcf:fileName>', $domRequest->getTemplate());
+        $this->assertContains('<wcf:contentFile>base64_fileZIP</wcf:contentFile>', $domRequest->getTemplate());
+        $this->assertContains('<wcf:contentFile>base64_fileZIP</wcf:contentFile>', $domRequest->getTemplate());
+        $this->assertContains('<wcf:testSetId>xxxxxxxxxxxxxxxxxxx</wcf:testSetId>', $domRequest->getTemplate());
     }
 
     /**
-     * @test
+     *
      */
     public function generate_template_dom_request_send_bill_async()
     {
@@ -43,10 +47,10 @@ class TemplatesTest extends TestCase
         $domDocumentValidate = new DOMDocument();
         $domDocumentValidate->validateOnParse = true;
 
-        $this->assertSame(true, $domDocumentValidate->loadXML($domRequest->getString()));
-        $this->assertContains('<wcf:fileName>Test.xml</wcf:fileName>', $domRequest->getString());
-        $this->assertContains('<wcf:contentFile>base64_fileZIP</wcf:contentFile>', $domRequest->getString());
-        $this->assertContains('<wcf:contentFile>base64_fileZIP</wcf:contentFile>', $domRequest->getString());
+        $this->assertSame(true, $domDocumentValidate->loadXML($domRequest->getTemplate()));
+        $this->assertContains('<wcf:fileName>Test.xml</wcf:fileName>', $domRequest->getTemplate());
+        $this->assertContains('<wcf:contentFile>base64_fileZIP</wcf:contentFile>', $domRequest->getTemplate());
+        $this->assertContains('<wcf:contentFile>base64_fileZIP</wcf:contentFile>', $domRequest->getTemplate());
     }
 
 

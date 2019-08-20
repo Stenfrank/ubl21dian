@@ -65,11 +65,8 @@ trait DIANTrait
     {
         if (!empty($this->certs)) {
             openssl_x509_export($this->certs['cert'], $stringCert);
-            $stringCert = str_replace("-----BEGIN CERTIFICATE-----", "", $stringCert);
-            $stringCert = str_replace("-----END CERTIFICATE-----", "", $stringCert);
-            $stringCert = str_replace("\n", "", str_replace("\r", "", $stringCert));
-            $stringCert = $this->prettify($stringCert);
-            return $stringCert;
+
+            return str_replace([PHP_EOL, '-----BEGIN CERTIFICATE-----', '-----END CERTIFICATE-----'], '', $stringCert);
         }
 
         throw new Failedx509ExportCertificateException(get_class($this));

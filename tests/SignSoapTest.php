@@ -4,6 +4,7 @@ namespace Stenfrank\Tests;
 
 use DOMDocument;
 use Stenfrank\UBL21dian\BinarySecurityToken\SOAP;
+use Stenfrank\UBL21dian\HTTP\DOM\Request\SendTestSetAsyncRequestDOM;
 
 /**
  * Sign soap test.
@@ -60,4 +61,27 @@ class SignSoapTest extends TestCase
 
         $this->assertSame(true, $domDocumentValidate->loadXML($soap21->xml));
     }
+
+
+    /**
+     * @test
+     */
+    public function sing_template_dom_request_send_test_bill_async()
+    {
+        $domRequest = new SendTestSetAsyncRequestDOM($this->pathCert,$this->passwordCert);
+        $domRequest->fileName = "Test.xml";
+        $domRequest->contentFile = "base64_fileZIP";
+        $domRequest->testSetId = "xxxxxxxxxxxxxxxxxxx";
+        $domRequest->sign();
+
+
+        $domDocumentValidate = new DOMDocument();
+        $domDocumentValidate->validateOnParse = true;
+
+        $this->assertSame(true, $domDocumentValidate->loadXML($domRequest->getTemplate()));
+        $this->assertContains('BinarySecurityToken', $domRequest->xml);
+        $this->assertContains('ds:SignatureValue', $domRequest->xml);
+        $this->assertContains('ds:KeyInfo', $domRequest->xml);
+    }
+
 }

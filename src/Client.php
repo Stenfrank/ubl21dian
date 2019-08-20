@@ -4,6 +4,7 @@ namespace Stenfrank\UBL21dian;
 
 use DOMDocument;
 use Exception;
+use Stenfrank\UBL21dian\Exceptions\CurlException;
 use Stenfrank\UBL21dian\Templates\Template;
 
 /**
@@ -32,26 +33,27 @@ class Client
      */
     private $response;
 
+
     /**
-     * Construct.
-     *
-     * @param \Stenfrank\UBL21dian\Templates\Template $template
-     * @throws Exception
+     * Client constructor.
+     * @param string $url
+     * @param string $content
+     * @throws CurlException
      */
-    public function __construct(Template $template)
+    public function __construct(string $url,string $content)
     {
         $this->curl = curl_init();
 
-        curl_setopt($this->curl, CURLOPT_URL, $this->to = $template->To);
+        curl_setopt($this->curl, CURLOPT_URL, $this->to = $url);
         curl_setopt($this->curl, CURLOPT_CONNECTTIMEOUT, 180);
         curl_setopt($this->curl, CURLOPT_TIMEOUT, 180);
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->curl, CURLOPT_POST, true);
-        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $template->xml);
+        curl_setopt($this->curl, CURLOPT_POSTFIELDS, $content);
         curl_setopt($this->curl, CURLOPT_HTTPHEADER, [
             'Accept: application/xml',
             'Content-type: application/soap+xml',
-            'Content-length: '.strlen($template->xml),
+            'Content-length: '.strlen($content),
         ]);
 
         $this->exec();
@@ -60,12 +62,12 @@ class Client
 
     /**
      * Exec.
-     * @throws Exception
+     * @throws CurlException
      */
     private function exec()
     {
         if (false === ($this->response = curl_exec($this->curl))) {
-            throw new Exception('Class '.get_class($this).': '.curl_error($this->curl));
+            throw new CurlException(get_class($this),curl_error($this->curl));
         }
     }
 

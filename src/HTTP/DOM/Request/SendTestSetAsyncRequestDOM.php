@@ -10,24 +10,23 @@ use Stenfrank\UBL21dian\HTTP\DOM\Response\SendTestSetAsyncResponseDOM;
 class SendTestSetAsyncRequestDOM extends BasicRequestDOM
 {
 
-
-    private $fileName;
-    private $contentFile;
-    private $testSetId;
+    /**
+     * Action.
+     *
+     * @var string
+     */
+    public $Action = 'http://wcf.dian.colombia/IWcfDianCustomerServices/SendTestSetAsync';
 
     /**
-     * SendTestSetAsyncRequestDOM constructor.
-     * @param $fileName
-     * @param $contentFile
-     * @param $testSetId
+     * Required properties.
+     *
+     * @var array
      */
-    public function __construct($fileName, $contentFile, $testSetId)
-    {
-        $this->fileName = $fileName;
-        $this->contentFile = $contentFile;
-        $this->testSetId = $testSetId;
-        parent::__construct();
-    }
+    protected $requiredProperties = [
+        'fileName',
+        'contentFile',
+        'testSetId',
+    ];
 
 
     /**
@@ -35,16 +34,16 @@ class SendTestSetAsyncRequestDOM extends BasicRequestDOM
      */
     protected function build()
     {
-        $this->domDocument->getElementsByTagName("fileName")->item(0)->nodeValue = $this->fileName;
-        $this->domDocument->getElementsByTagName("contentFile")->item(0)->nodeValue = $this->contentFile;
-        $this->domDocument->getElementsByTagName("testSetId")->item(0)->nodeValue = $this->testSetId;
+        $this->domTemplate->getElementsByTagName("fileName")->item(0)->nodeValue = $this->fileName;
+        $this->domTemplate->getElementsByTagName("contentFile")->item(0)->nodeValue = $this->contentFile;
+        $this->domTemplate->getElementsByTagName("testSetId")->item(0)->nodeValue = $this->testSetId;
     }
 
     /**
      * Devuelve la clase response que va a tener el request
      * @return mixed
      */
-    public function getClassResponse()
+    protected function getClassResponse()
     {
         return SendTestSetAsyncResponseDOM::class;
     }
@@ -54,7 +53,7 @@ class SendTestSetAsyncRequestDOM extends BasicRequestDOM
      * Devuelve el nombre de la plantilla XML
      * @return String
      */
-    public function getNameTemplate(): string
+    protected function getNameTemplate(): string
     {
         return "SendTestSetAsync";
     }
