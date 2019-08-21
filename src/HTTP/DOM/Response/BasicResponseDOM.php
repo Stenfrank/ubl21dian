@@ -15,6 +15,9 @@ abstract class BasicResponseDOM
      */
     protected $domDocument;
 
+    /**
+     * @var \DOMXPath
+     */
     protected $domXPath;
 
     /**
@@ -41,7 +44,6 @@ abstract class BasicResponseDOM
         $this->statusHTTPCode = $statusCode;
         $this->descompose();
     }
-
 
     /**
      * Se encarga de registrar los namespaces del response
@@ -105,7 +107,7 @@ abstract class BasicResponseDOM
     protected function descompose()
     {
         $this->created = $this->getQuery("//o:Security/u:Timestamp/u:Created",false)->nodeValue;
-        $this->expires = $this->getQuery("//o:Security/u:Timestamp/u:Expires",false)->nodeValue;;
+        $this->expires = $this->getQuery("//o:Security/u:Timestamp/u:Expires",false)->nodeValue;
     }
 
     /**
@@ -131,11 +133,6 @@ abstract class BasicResponseDOM
     {
         return $this->statusHTTPCode;
     }
-
-
-
-
-
 
 
 }

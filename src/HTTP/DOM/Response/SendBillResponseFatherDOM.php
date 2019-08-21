@@ -35,6 +35,7 @@ class SendBillResponseFatherDOM extends BasicResponseDOM
      */
     public function getSuccess()
     {
+
         $nodeValue = $this->getQuery("//b:ErrorMessageList/c:XmlParamsResponseTrackId/c:Success")->nodeValue;
 
         if($nodeValue == "false"){

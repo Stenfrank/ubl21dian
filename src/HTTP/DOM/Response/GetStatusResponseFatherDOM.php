@@ -35,9 +35,9 @@ class GetStatusResponseFatherDOM extends BasicResponseDOM
 
         $value = $this->getQuery("//b:DianResponse/b:IsValid")->nodeValue;
         if($value == "false"){
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     /**
