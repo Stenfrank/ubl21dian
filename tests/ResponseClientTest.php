@@ -1,7 +1,5 @@
 <?php
 namespace Stenfrank\Tests;
-use Stenfrank\UBL21dian\HTTP\DOM\Request\SendTestSetAsyncRequestDOM;
-use Stenfrank\UBL21dian\HTTP\DOM\Response\GetStatusResponseDOM;
 use Stenfrank\UBL21dian\HTTP\DOM\Response\GetStatusZipResponseDOM;
 use Stenfrank\UBL21dian\HTTP\DOM\Response\SendTestSetAsyncResponseDOM;
 
@@ -30,7 +28,6 @@ class ResponseClientTest extends TestCase
         $this->assertFalse($responseObjectDom->getSuccess());
         $this->assertEquals("invoiceSigned_sergiov2",$responseObjectDom->getXmlFileName());
 
-        var_dump($responseObjectDom->getZipKey());
 
     }
 
@@ -52,7 +49,7 @@ class ResponseClientTest extends TestCase
     /**
      * @test
      */
-    public function extract_response_get_status_zip()
+    public function extract_response_get_status_zip_with_errors()
     {
         $domResponse = new \DOMDocument();
         $domResponse->load(__DIR__."/resources/responses/response_getstatusZip_with_errors.xml");
@@ -64,10 +61,6 @@ class ResponseClientTest extends TestCase
         $errors = $responseObjectDom->getErrors();
         $this->assertTrue(count($errors) > 0);
         $this->assertContains("Regla: FAJ26, Rechazo: Responsabilidad informada por emisor no valida según lista",$errors[0]);
-
-
-
-
 
     }
 

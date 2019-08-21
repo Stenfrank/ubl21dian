@@ -8,7 +8,7 @@ namespace Stenfrank\UBL21dian\HTTP\DOM\Response;
  * @package Stenfrank\UBL21dian\HTTP\DOM\Response
  * @author Juan Diaz - FuriosoJack <iam@furiosojack.com>
  */
-class GetStatusResponseDOM extends BasicResponseDOM
+class GetStatusResponseDOM extends GetStatusResponseFatherDOM
 {
 
 }
