@@ -3,6 +3,7 @@ namespace Stenfrank\Tests;
 
 use DOMDocument;
 use Stenfrank\UBL21dian\Client;
+use Stenfrank\UBL21dian\HTTP\DOM\Request\GetNumberingRangeRequestDOM;
 use Stenfrank\UBL21dian\HTTP\DOM\Request\GetStatusRequestDOM;
 use Stenfrank\UBL21dian\HTTP\DOM\Request\SendTestSetAsyncRequestDOM;
 use Stenfrank\UBL21dian\Templates\SOAP\GetStatus;
@@ -69,9 +70,28 @@ class ClientTest extends TestCase
         $this->assertSame(true, $domDocumentValidate->loadXML($stringResponse));
 
         $this->assertContains("Set de prueba con identificador xxxxxxxxxxxxxxxxxxx es incorrecto.",$stringResponse);
-
-
     }
 
+    /**
+     * @test
+     */
+    public function send_numbering_range_faild()
+    {
+        $domRequest = new GetNumberingRangeRequestDOM($this->pathCert,$this->passwordCert);
+        $domRequest->accountCode = "1111111111111";
+        $domRequest->accountCodeT = "222222222222";
+        $domRequest->softwareCode = "fc8eac422eba16e2sasdadadasda";
+
+        $responseDOM = $domRequest->signToSend();
+
+        $stringResponse = $responseDOM->getDomDocument()->saveXML();
+
+        $domDocumentValidate = new DOMDocument();
+        $domDocumentValidate->validateOnParse = true;
+        $this->assertSame(true, $domDocumentValidate->loadXML($stringResponse));
+
+        $this->assertContains("no autorizado para consultar rangos de numeraci&#xF3;n del NIT: 1111111111111",$stringResponse);
+
+    }
 
 }
