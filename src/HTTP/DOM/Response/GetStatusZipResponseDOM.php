@@ -15,7 +15,7 @@ class GetStatusZipResponseDOM extends BasicResponseDOM
     /**
      * Se encarga de registrar los namespaces del response
      */
-    protected function registerNS()
+    protected function registerNS($namespacese = array())
     {
         $namesapces = [
             "b" => "http://schemas.datacontract.org/2004/07/DianResponse",
@@ -86,14 +86,14 @@ class GetStatusZipResponseDOM extends BasicResponseDOM
         return $this->getQuery("//b:DianResponse/b:XmlFileName")->nodeValue;
     }
 
+    /**
+     * @return array
+     * @throws \Stenfrank\UBL21dian\Exceptions\QueryNotFountException
+     */
     public function getErrors()
     {
-        $elementMessage = $this->getQuery("//b:ErrorMessage");
-
+        $elementMessage = $this->getQuery("//b:ErrorMessage/c:string",true,null);
         $strings = [];
-
-        $elementsErrors = $elementMessage->getElementbyTagName("c:string");
-
         foreach ($elementMessage as $element){
             $strings[] = $element->nodeValue;
         }

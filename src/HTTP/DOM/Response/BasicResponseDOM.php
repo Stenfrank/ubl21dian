@@ -65,8 +65,9 @@ abstract class BasicResponseDOM
 
     }
 
-
-
+    /**
+     * @return \DOMDocument
+     */
     public function getDomDocument()
     {
         return $this->domDocument;
@@ -80,7 +81,7 @@ abstract class BasicResponseDOM
      * @param bool $validate
      * @param int $item
      *
-     * @return mixed
+     * @return \DOMElement
      * @throws QueryNotFountException
      */
     protected function getQuery($query, $validate = true, $item = 0)

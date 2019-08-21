@@ -11,16 +11,28 @@ namespace Stenfrank\UBL21dian\HTTP\DOM\Response;
 class SendBillResponseFatherDOM extends BasicResponseDOM
 {
 
+    /**
+     * @return mixed
+     * @throws \Stenfrank\UBL21dian\Exceptions\QueryNotFountException
+     */
     public function getDocumentKey()
     {
         return $this->getQuery("//b:ErrorMessageList/c:XmlParamsResponseTrackId/c:DocumentKey")->nodeValue;
     }
 
+    /**
+     * @return mixed
+     * @throws \Stenfrank\UBL21dian\Exceptions\QueryNotFountException
+     */
     public function getProcessedMessage()
     {
         return $this->getQuery("//b:ErrorMessageList/c:XmlParamsResponseTrackId/c:ProcessedMessage")->nodeValue;
     }
 
+    /**
+     * @return bool
+     * @throws \Stenfrank\UBL21dian\Exceptions\QueryNotFountException
+     */
     public function getSuccess()
     {
         $nodeValue = $this->getQuery("//b:ErrorMessageList/c:XmlParamsResponseTrackId/c:Success")->nodeValue;
@@ -32,11 +44,19 @@ class SendBillResponseFatherDOM extends BasicResponseDOM
 
     }
 
+    /**
+     * @return mixed
+     * @throws \Stenfrank\UBL21dian\Exceptions\QueryNotFountException
+     */
     public function getXmlFileName()
     {
         return $this->getQuery("//b:ErrorMessageList/c:XmlParamsResponseTrackId/c:XmlFileName")->nodeValue;
     }
 
+    /**
+     * @return mixed
+     * @throws \Stenfrank\UBL21dian\Exceptions\QueryNotFountException
+     */
     public function getZipKey()
     {
         return $this->getQuery("//b:ZipKey")->nodeValue;
