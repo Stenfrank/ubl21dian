@@ -61,7 +61,7 @@ class ResponseClientTest extends TestCase
         $errors = $responseObjectDom->getErrors();
         $this->assertTrue(count($errors) > 0);
         $this->assertContains("Regla: FAJ26, Rechazo: Responsabilidad informada por emisor no valida según lista",$errors[0]);
-
     }
+
 
 }

@@ -91,7 +91,34 @@ class ClientTest extends TestCase
         $this->assertSame(true, $domDocumentValidate->loadXML($stringResponse));
 
         $this->assertContains("no autorizado para consultar rangos de numeraci&#xF3;n del NIT: 1111111111111",$stringResponse);
+        $this->assertContains("NIT: 8300448582 no autorizado para consultar rangos de numeración del NIT: 1111111111111",$responseDOM->getOperationDescription());
 
     }
+
+    /**
+     * @test
+     */
+    public function send_numbering_range_sucess()
+    {
+        $domRequest = new GetNumberingRangeRequestDOM($this->pathCert,$this->passwordCert);
+        $domRequest->accountCode = getenv('ACCOUNT_CODE');
+        $domRequest->accountCodeT = getenv('ACCOUNT_CODE');
+        $domRequest->softwareCode = getenv("SOFTWARE_IDENTIFICATION");
+
+        $responseDOM = $domRequest->signToSend();
+
+        $stringResponse = $responseDOM->getDomDocument()->saveXML();
+
+       //file_put_contents(__DIR__. "/outputs/response_getnumering_ok.xml",$stringResponse);
+
+        $domDocumentValidate = new DOMDocument();
+        $domDocumentValidate->validateOnParse = true;
+        $this->assertSame(true, $domDocumentValidate->loadXML($stringResponse));
+
+        //$this->assertContains("no autorizado para consultar rangos de numeraci&#xF3;n del NIT: 1111111111111",$stringResponse);
+        //$this->assertContains("NIT: 8300448582 no autorizado para consultar rangos de numeración del NIT: 1111111111111",$responseDOM->getOperationDescription());
+
+    }
+
 
 }

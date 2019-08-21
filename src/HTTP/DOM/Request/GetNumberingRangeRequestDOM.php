@@ -23,8 +23,8 @@ class GetNumberingRangeRequestDOM extends BasicRequestDOM
      * @var array
      */
     protected $requiredProperties = [
-        'accountCode', //Numero de identificacion tributaria, sin punto ni separaciones
-        'accountCodeT', //numero de identificacion tributaria del duseño del software
+        'accountCode', //Numero de identificacion tributaria, sin punto ni separaciones (NIT)
+        'accountCodeT', //numero de identificacion tributaria del duseño del software (NIT)
         'softwareCode' //numero de identificacion del software que genera las facturas electronicas alfanumerica de 16 caracteres
     ];
 
