@@ -3,6 +3,7 @@
 namespace Stenfrank\Tests;
 
 use DOMDocument;
+use Stenfrank\UBL21dian\HTTP\DOM\Request\GetNumberingRangeRequestDOM;
 use Stenfrank\UBL21dian\HTTP\DOM\Request\GetStatusRequestDOM;
 use Stenfrank\UBL21dian\HTTP\DOM\Request\GetStatusZipRequestDOM;
 use Stenfrank\UBL21dian\HTTP\DOM\Request\SendBillAsyncRequestDOM;
@@ -132,5 +133,28 @@ class TemplatesTest extends TestCase
         $this->assertContains('<wcf:trackId>xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</wcf:trackId>', $getStatus->xml);
 
         file_put_contents(__DIR__. '/outputs/GETSTATUS.xml', $getStatus->xml);
+    }
+
+    /**
+     * @test
+     */
+    public function generate_tamplate_get_numbering_range()
+    {
+        $getNumbering = new GetNumberingRangeRequestDOM($this->pathCert,$this->passwordCert);
+        $getNumbering->accountCode = "ACOUNT_CODE";
+        $getNumbering->accountCodeT = "ACOUNT_CODE_PROVIDER";
+        $getNumbering->softwareCode = "SOFTWARE_CODE";
+
+        $getNumbering->sign();
+
+        $domDocumentValidate = new DOMDocument();
+        $domDocumentValidate->validateOnParse = true;
+
+        $this->assertSame(true, $domDocumentValidate->loadXML($getNumbering->xml));
+        $this->assertContains("http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-soap-message-security-1.0#Base64Binary",$getNumbering->xml);
+        $this->assertContains("<wcf:accountCode>ACOUNT_CODE</wcf:accountCode>",$getNumbering->xml);
+        $this->assertContains("<wcf:accountCodeT>ACOUNT_CODE_PROVIDER</wcf:accountCodeT>",$getNumbering->xml);
+        $this->assertContains("<wcf:softwareCode>SOFTWARE_CODE</wcf:softwareCode>",$getNumbering->xml);
+
     }
 }
