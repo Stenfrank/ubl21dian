@@ -6,6 +6,7 @@ use Stenfrank\UBL21dian\Client;
 use Stenfrank\UBL21dian\HTTP\DOM\Request\GetNumberingRangeRequestDOM;
 use Stenfrank\UBL21dian\HTTP\DOM\Request\GetStatusRequestDOM;
 use Stenfrank\UBL21dian\HTTP\DOM\Request\SendTestSetAsyncRequestDOM;
+use Stenfrank\UBL21dian\HTTP\Request;
 use Stenfrank\UBL21dian\Templates\SOAP\GetStatus;
 use Stenfrank\UBL21dian\Templates\SOAP\GetStatusZip;
 
@@ -26,13 +27,18 @@ class ClientTest extends TestCase
         // Sign
         $getStatusZip->sign();
 
-        $client = new Client($getStatusZip->To,$getStatusZip->xml);
+        $request = new Request($getStatusZip->To,$getStatusZip->xml);
+        $request->send();
+        $response = $request->getResponse();
 
-        $domDocumentValidate = new DOMDocument();
-        $domDocumentValidate->validateOnParse = true;
+        $this->assertTrue($response->isSuccessful());
 
-        $this->assertSame(true, $domDocumentValidate->loadXML($client->getResponse()));
-        $this->assertContains('TrackId no existe en los registros de la DIAN.', $client->getResponse());
+        if($response->isSuccessful()){
+            $domDocumentValidate = new DOMDocument();
+            $domDocumentValidate->validateOnParse = true;
+            $this->assertSame(true, $domDocumentValidate->loadXML($response->getBody()));
+            $this->assertContains('TrackId no existe en los registros de la DIAN.', $response->getBody());
+        }
     }
 
     /** @test */
@@ -42,14 +48,21 @@ class ClientTest extends TestCase
         $getStatusZip->trackId = 'xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx';
 
         // Sign to send
-        $responseDOM = $getStatusZip->signToSend();
+        $reponse = $getStatusZip->signToSend();
 
-        $domDocumentValidate = new DOMDocument();
-        $domDocumentValidate->validateOnParse = true;
+        $this->assertTrue($reponse->isSuccessful());
+        $this->assertNotNull($reponse->getBody());
+        if($reponse->isSuccessful() && $reponse->getBody() != null){
 
-        $responseString = $responseDOM->getDomDocument()->saveXML();
-        $this->assertSame(true, $domDocumentValidate->loadXML($responseString));
-        $this->assertContains('TrackId no existe en los registros de la DIAN.', $responseString);
+            $responseDOM = $reponse->getBody();
+            $domDocumentValidate = new DOMDocument();
+            $domDocumentValidate->validateOnParse = true;
+
+            $responseString = $responseDOM->getDomDocument()->saveXML();
+            $this->assertSame(true, $domDocumentValidate->loadXML($responseString));
+            $this->assertContains('TrackId no existe en los registros de la DIAN.', $responseString);
+        }
+
     }
 
     /**
@@ -61,15 +74,24 @@ class ClientTest extends TestCase
         $domRequest->fileName = "invoice_signed_dian_v2.zip";
         $domRequest->contentFile = base64_encode(file_get_contents(__DIR__."/resources/zips/invoice_signed_dian_v2.zip"));
         $domRequest->testSetId = "xxxxxxxxxxxxxxxxxxx";
-        $responseDom = $domRequest->signToSend();
 
-        $stringResponse = $responseDom->getDomDocument()->saveXML();
+        $response = $domRequest->signToSend();
+        $this->assertTrue($response->isSuccessful());
+        $this->assertNotNull($response->getBody());
 
-        $domDocumentValidate = new DOMDocument();
-        $domDocumentValidate->validateOnParse = true;
-        $this->assertSame(true, $domDocumentValidate->loadXML($stringResponse));
+        if($response->isSuccessful() && $response->getBody() != null){
 
-        $this->assertContains("Set de prueba con identificador xxxxxxxxxxxxxxxxxxx es incorrecto.",$stringResponse);
+            $responseDom = $response->getBody();
+
+            $stringResponse = $responseDom->getDomDocument()->saveXML();
+
+            $domDocumentValidate = new DOMDocument();
+            $domDocumentValidate->validateOnParse = true;
+            $this->assertSame(true, $domDocumentValidate->loadXML($stringResponse));
+
+            $this->assertContains("Set de prueba con identificador xxxxxxxxxxxxxxxxxxx es incorrecto.",$stringResponse);
+        }
+
     }
 
     /**
@@ -82,16 +104,24 @@ class ClientTest extends TestCase
         $domRequest->accountCodeT = "222222222222";
         $domRequest->softwareCode = "fc8eac422eba16e2sasdadadasda";
 
-        $responseDOM = $domRequest->signToSend();
+        $response = $domRequest->signToSend();
 
-        $stringResponse = $responseDOM->getDomDocument()->saveXML();
+        $this->assertTrue($response->isSuccessful());
+        $this->assertNotNull($response->getBody());
 
-        $domDocumentValidate = new DOMDocument();
-        $domDocumentValidate->validateOnParse = true;
-        $this->assertSame(true, $domDocumentValidate->loadXML($stringResponse));
+        if($response->isSuccessful() && $response->getBody() != null){
 
-        $this->assertContains("no autorizado para consultar rangos de numeraci&#xF3;n del NIT: 1111111111111",$stringResponse);
-        $this->assertContains("NIT: 8300448582 no autorizado para consultar rangos de numeración del NIT: 1111111111111",$responseDOM->getOperationDescription());
+            $responseDOM = $response->getBody();
+
+            $stringResponse = $responseDOM->getDomDocument()->saveXML();
+
+            $domDocumentValidate = new DOMDocument();
+            $domDocumentValidate->validateOnParse = true;
+            $this->assertSame(true, $domDocumentValidate->loadXML($stringResponse));
+
+            $this->assertContains("no autorizado para consultar rangos de numeraci&#xF3;n del NIT: 1111111111111",$stringResponse);
+            $this->assertContains("NIT: 8300448582 no autorizado para consultar rangos de numeración del NIT: 1111111111111",$responseDOM->getOperationDescription());
+        }
 
     }
 
@@ -105,18 +135,25 @@ class ClientTest extends TestCase
         $domRequest->accountCodeT = getenv('ACCOUNT_CODE');
         $domRequest->softwareCode = getenv("SOFTWARE_IDENTIFICATION");
 
-        $responseDOM = $domRequest->signToSend();
+        $response = $domRequest->signToSend();
 
-        $stringResponse = $responseDOM->getDomDocument()->saveXML();
+        $this->assertTrue($response->isSuccessful());
+        $this->assertNotNull($response->getBody());
+        if($response->isSuccessful() && $response->getBody() != null){
 
-       //file_put_contents(__DIR__. "/outputs/response_getnumering_ok.xml",$stringResponse);
+            $responseDOM = $response->getBody();
 
-        $domDocumentValidate = new DOMDocument();
-        $domDocumentValidate->validateOnParse = true;
-        $this->assertSame(true, $domDocumentValidate->loadXML($stringResponse));
+            $stringResponse = $responseDOM->getDomDocument()->saveXML();
 
-        //$this->assertContains("no autorizado para consultar rangos de numeraci&#xF3;n del NIT: 1111111111111",$stringResponse);
-        //$this->assertContains("NIT: 8300448582 no autorizado para consultar rangos de numeración del NIT: 1111111111111",$responseDOM->getOperationDescription());
+           //file_put_contents(__DIR__. "/outputs/response_getnumering_ok.xml",$stringResponse);
+
+            $domDocumentValidate = new DOMDocument();
+            $domDocumentValidate->validateOnParse = true;
+            $this->assertSame(true, $domDocumentValidate->loadXML($stringResponse));
+
+            //$this->assertContains("no autorizado para consultar rangos de numeraci&#xF3;n del NIT: 1111111111111",$stringResponse);
+            //$this->assertContains("NIT: 8300448582 no autorizado para consultar rangos de numeración del NIT: 1111111111111",$responseDOM->getOperationDescription());
+        }
 
     }
 

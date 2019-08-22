@@ -4,6 +4,8 @@ use Stenfrank\UBL21dian\BinarySecurityToken\SOAP;
 use Stenfrank\UBL21dian\Client;
 use Stenfrank\UBL21dian\Exceptions\RequiredPropertyTemplateRequest;
 use Stenfrank\UBL21dian\HTTP\DOM\Response\BasicResponseDOM;
+use Stenfrank\UBL21dian\HTTP\Request;
+use Stenfrank\UBL21dian\HTTP\Response;
 
 /**
  * Class BasicRequestDOM
@@ -127,17 +129,18 @@ abstract class BasicRequestDOM extends SOAP
         return parent::sign($this->getTemplate());
     }
 
+
     /**
-     * @return BasicResponseDOM
+     * @return Response
      * @throws \Stenfrank\UBL21dian\Exceptions\CurlException
      */
-    public function signToSend(): BasicResponseDOM
+    public function signToSend(): Response
     {
         parent::sign($this->getTemplate());
 
-        $this->client = new Client($this->To,$this->xml);
-        $classResponse = $this->getClassResponse();
-        return new $classResponse($this->client->getResponseToDOM(),$this->client->getStatusCode());
+        $this->client = new Request($this->To,$this->xml);
+        $this->client->send($this->getClassResponse());
+        return $this->client->getResponse();
 
     }
 

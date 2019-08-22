@@ -30,18 +30,12 @@ abstract class BasicResponseDOM
      */
     protected $expires;
 
-    /**
-     * @var
-     */
-    protected $statusHTTPCode;
 
-
-    public function __construct(\DOMDocument $domDocument, $statusCode)
+    public function __construct(\DOMDocument $domDocument)
     {
         $this->domDocument = $domDocument;
         $this->domXPath = new \DOMXPath($this->domDocument);
         $this->registerNS();
-        $this->statusHTTPCode = $statusCode;
         $this->descompose();
     }
 
@@ -126,13 +120,6 @@ abstract class BasicResponseDOM
         return $this->expires;
     }
 
-    /**
-     * @return mixed
-     */
-    public function getStatusHTTPCode()
-    {
-        return $this->statusHTTPCode;
-    }
 
 
 }

@@ -92,5 +92,13 @@ class Request
         $this->response = new Response($response,$this->curl,$classResponse);
     }
 
+    /**
+     * @return Response
+     */
+    public function getResponse(): Response
+    {
+        return $this->response;
+    }
+
 
 }

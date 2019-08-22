@@ -3,6 +3,7 @@
 
 namespace Stenfrank\UBL21dian\HTTP;
 use DOMDocument;
+use Stenfrank\UBL21dian\HTTP\DOM\Response\BasicResponseDOM;
 
 /**
  * Class Response
@@ -22,9 +23,12 @@ class Response
      */
     private $curlClient;
 
+    /**
+     * @var
+     */
     private $classResonse;
 
-    public function __construct($response, $curlClient, $classResponse)
+    public function __construct($response, $curlClient, $classResponse = null)
     {
         $this->responseRAW = $response;
         $this->curlClient = $curlClient;
@@ -48,18 +52,24 @@ class Response
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     public function getBodyRAW()
     {
         return $this->responseRAW;
     }
 
+
     /**
-     * @return null
+     * @return string|null|BasicResponseDOM
      */
     public function getBody()
     {
+
+        if($this->classResonse == null){
+            return $this->getBodyRAW();
+        }
+
         try{
             $xmlResponse = new DOMDocument();
             $xmlResponse->loadXML($this->responseRAW);
