@@ -21,6 +21,11 @@
             "name": "Stenfrank",
             "email": "frank921713@hotmail.com",
             "homepage": "https://soenac.com"
+        },
+        {
+            "name": "FuriosoJack",
+            "email": "iam@furiosojack.com",
+            "homepage": "https://github.com/furiosojack"
         }
     ],
     "minimum-stability": "stable",
